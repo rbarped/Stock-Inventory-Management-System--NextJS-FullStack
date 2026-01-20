@@ -125,8 +125,8 @@ export default function ApiStatusPage() {
       setSystemStatus(status);
     } catch (error) {
       toast({
-        title: "Error Loading Status",
-        description: "Failed to load system status. Please try again.",
+        title: "Error cargando el estado del sistema",
+        description: "No se pudo cargar el estado del sistema. Por favor, inténtelo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -139,8 +139,8 @@ export default function ApiStatusPage() {
     await loadSystemStatus();
     setIsRefreshing(false);
     toast({
-      title: "Status Updated",
-      description: "System status has been refreshed.",
+      title: "Estado actualizado",
+      description: "El estado del sistema ha sido actualizado.",
     });
   };
 
@@ -201,9 +201,9 @@ export default function ApiStatusPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-primary">API & Project Status</h1>
+            <h1 className="text-4xl font-bold text-primary">Estado de la API y del Proyecto</h1>
             <p className="text-lg text-muted-foreground">
-              Real-time monitoring of Stockly&apos;s API endpoints and system health
+              Monitoreo en tiempo real de los endpoints de la API y la salud del sistema de Stockly
             </p>
           </div>
           <Button
@@ -212,7 +212,7 @@ export default function ApiStatusPage() {
             className="flex items-center space-x-2"
           >
             <FiRefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+            <span>{isRefreshing ? 'Actualizando...' : 'Actualizar'}</span>
           </Button>
         </div>
 
@@ -222,7 +222,7 @@ export default function ApiStatusPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Project</CardTitle>
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Proyecto</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{systemStatus.project}</div>
@@ -231,7 +231,7 @@ export default function ApiStatusPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Environment</CardTitle>
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Entorno</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold capitalize">{systemStatus.environment}</div>
@@ -240,7 +240,7 @@ export default function ApiStatusPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Current Time</CardTitle>
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Hora Actual</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{systemStatus.currentTime}</div>
@@ -249,7 +249,7 @@ export default function ApiStatusPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Uptime</CardTitle>
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Tiempo de actividad</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{systemStatus.uptime}</div>
@@ -262,17 +262,17 @@ export default function ApiStatusPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FiActivity className="h-5 w-5" />
-                  API Health
+                  Salud de la API
                 </CardTitle>
                 <CardDescription>
-                  Overall health status of all API endpoints
+                  Estado general de salud de todos los endpoints de la API
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-3">
                   {getStatusIcon(systemStatus.apiHealth)}
                   <Badge className={getStatusColor(systemStatus.apiHealth)}>
-                    API is {systemStatus.apiHealth.toLowerCase()}.
+                    API está {systemStatus.apiHealth.toLowerCase()}.
                   </Badge>
                 </div>
               </CardContent>
@@ -286,7 +286,7 @@ export default function ApiStatusPage() {
                   Endpoints
                 </CardTitle>
                 <CardDescription>
-                  Individual endpoint health and response times
+                  Salud individual de los endpoints y tiempos de respuesta
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -322,20 +322,20 @@ export default function ApiStatusPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <FiDatabase className="h-5 w-5" />
-                    Database Status
+                    Estado de la Base de Datos
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       {getStatusIcon("OK")}
-                      <span>MongoDB Connection</span>
-                      <Badge className="bg-green-100 text-green-800">Connected</Badge>
+                      <span>Conexión a MongoDB</span>
+                      <Badge className="bg-green-100 text-green-800">Conectado</Badge>
                     </div>
                     <div className="flex items-center gap-2">
                       {getStatusIcon("OK")}
-                      <span>Prisma Client</span>
-                      <Badge className="bg-green-100 text-green-800">Ready</Badge>
+                      <span>Cliente Prisma</span>
+                      <Badge className="bg-green-100 text-green-800">Listo</Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -345,20 +345,20 @@ export default function ApiStatusPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <FiUsers className="h-5 w-5" />
-                    Authentication
+                    Autenticación
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       {getStatusIcon("OK")}
-                      <span>JWT Service</span>
-                      <Badge className="bg-green-100 text-green-800">Active</Badge>
+                      <span>Servicio JWT</span>
+                      <Badge className="bg-green-100 text-green-800">Activo</Badge>
                     </div>
                     <div className="flex items-center gap-2">
                       {getStatusIcon("OK")}
-                      <span>Session Management</span>
-                      <Badge className="bg-green-100 text-green-800">Working</Badge>
+                      <span>Gestión de Sesiones</span>
+                      <Badge className="bg-green-100 text-green-800">Funcionando</Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -370,17 +370,17 @@ export default function ApiStatusPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FiPackage className="h-5 w-5" />
-                  Deployment Information
+                  Información de Despliegue
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-semibold mb-2">Deployment</h4>
+                    <h4 className="font-semibold mb-2">Despliegue</h4>
                     <p className="text-muted-foreground">{systemStatus.deployment}</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-2">Last checked</h4>
+                    <h4 className="font-semibold mb-2">Última comprobación</h4>
                     <p className="text-muted-foreground">{systemStatus.lastChecked}</p>
                   </div>
                 </div>

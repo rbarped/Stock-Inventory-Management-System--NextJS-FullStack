@@ -28,8 +28,8 @@ export default async function handler(
         });
         res.status(201).json(category);
       } catch (error) {
-        console.error("Error creating category:", error);
-        res.status(500).json({ error: "Failed to create category" });
+        console.error("Error al crear la categoría:", error);
+        res.status(500).json({ error: "Error al crear la categoría" });
       }
       break;
     case "GET":
@@ -39,8 +39,8 @@ export default async function handler(
         });
         res.status(200).json(categories);
       } catch (error) {
-        console.error("Error fetching categories:", error);
-        res.status(500).json({ error: "Failed to fetch categories" });
+        console.error("Error al obtener las categorías:", error);
+        res.status(500).json({ error: "Error al obtener las categorías" });
       }
       break;
     case "PUT":
@@ -48,7 +48,7 @@ export default async function handler(
         const { id, name } = req.body;
 
         if (!id || !name) {
-          return res.status(400).json({ error: "ID and name are required" });
+          return res.status(400).json({ error: "ID y nombre son obligatorios" });
         }
 
         const updatedCategory = await prisma.category.update({
@@ -58,14 +58,14 @@ export default async function handler(
 
         res.status(200).json(updatedCategory);
       } catch (error) {
-        console.error("Error updating category:", error);
-        res.status(500).json({ error: "Failed to update category" });
+        console.error("Error al actualizar la categoría:", error);
+        res.status(500).json({ error: "Error al actualizar la categoría" });
       }
       break;
     case "DELETE":
       try {
         const { id } = req.body;
-        console.log("Deleting category with ID:", id); // Debug statement
+        console.log("Eliminando categoría con ID:", id); // Debug statement
 
         // Check if the category exists
         const category = await prisma.category.findUnique({
@@ -73,19 +73,19 @@ export default async function handler(
         });
 
         if (!category) {
-          return res.status(404).json({ error: "Category not found" });
+          return res.status(404).json({ error: "Categoría no encontrada" });
         }
 
         const deleteResponse = await prisma.category.delete({
           where: { id },
         });
 
-        console.log("Delete response:", deleteResponse); // Debug statement
+        console.log("Respuesta de eliminación:", deleteResponse); // Debug statement
 
         res.status(204).end();
       } catch (error) {
-        console.error("Error deleting category:", error);
-        res.status(500).json({ error: "Failed to delete category" });
+        console.error("Error al eliminar la categoría:", error);
+        res.status(500).json({ error: "Error al eliminar la categoría" });
       }
       break;
     default:

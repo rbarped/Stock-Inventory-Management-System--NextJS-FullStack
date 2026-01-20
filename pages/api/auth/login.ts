@@ -83,10 +83,10 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
     const token = generateToken(user.id);
 
     if (!token) {
-      console.error("Failed to generate JWT token for user id:", user.id);
+      console.error("Fallo al generar el token para el usuario con id:", user.id);
       return res
         .status(500)
-        .json({ error: "Failed to generate session token" });
+        .json({ error: "Fallo al generar el token de sesión" });
     }
 
     // Determine if the connection is secure
@@ -110,7 +110,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       sessionId: token,
     });
   } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error de inicio de sesión:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 }

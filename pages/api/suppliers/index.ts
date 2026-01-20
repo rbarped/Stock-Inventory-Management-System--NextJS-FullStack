@@ -28,8 +28,8 @@ export default async function handler(
         });
         res.status(201).json(supplier);
       } catch (error) {
-        console.error("Error creating supplier:", error);
-        res.status(500).json({ error: "Failed to create supplier" });
+        console.error("Error creando el proveedor:", error);
+        res.status(500).json({ error: "Fallo al crear el proveedor" });
       }
       break;
     case "GET":
@@ -39,8 +39,8 @@ export default async function handler(
         });
         res.status(200).json(suppliers);
       } catch (error) {
-        console.error("Error fetching suppliers:", error);
-        res.status(500).json({ error: "Failed to fetch suppliers" });
+        console.error("Error obteniendo los proveedores:", error);
+        res.status(500).json({ error: "Fallo al obtener los proveedores" });
       }
       break;
     case "PUT":
@@ -48,7 +48,7 @@ export default async function handler(
         const { id, name } = req.body;
 
         if (!id || !name) {
-          return res.status(400).json({ error: "ID and name are required" });
+          return res.status(400).json({ error: "ID y nombre son obligatorios" });
         }
 
         const updatedSupplier = await prisma.supplier.update({
@@ -58,8 +58,8 @@ export default async function handler(
 
         res.status(200).json(updatedSupplier);
       } catch (error) {
-        console.error("Error updating supplier:", error);
-        res.status(500).json({ error: "Failed to update supplier" });
+        console.error("Error actualizando el proveedor:", error);
+        res.status(500).json({ error: "Fallo al actualizar el proveedor" });
       }
       break;
     case "DELETE":
@@ -71,7 +71,7 @@ export default async function handler(
         });
 
         if (!supplier) {
-          return res.status(404).json({ error: "Supplier not found" });
+          return res.status(404).json({ error: "Proveedor no encontrado" });
         }
 
         await prisma.supplier.delete({
@@ -80,8 +80,8 @@ export default async function handler(
 
         res.status(204).end();
       } catch (error) {
-        console.error("Error deleting supplier:", error);
-        res.status(500).json({ error: "Failed to delete supplier" });
+        console.error("Error eliminando el proveedor:", error);
+        res.status(500).json({ error: "Fallo al eliminar el proveedor" });
       }
       break;
     default:

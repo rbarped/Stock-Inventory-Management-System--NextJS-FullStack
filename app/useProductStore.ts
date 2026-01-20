@@ -76,11 +76,11 @@ export const useProductStore = create<ProductState>((set) => ({
       });
 
       if (process.env.NODE_ENV === "development") {
-        console.log("Updated State with Products:", products);
+        console.log("Estado actualizado con productos:", products);
       }
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
-        console.error("Error loading products:", error);
+        console.error("Error al cargar los productos:", error);
       }
       set({ allProducts: [] });
     } finally {
@@ -97,14 +97,14 @@ export const useProductStore = create<ProductState>((set) => ({
       const newProduct = response.data;
       // Debug log - only log in development
       if (process.env.NODE_ENV === "development") {
-        console.log("Product added successfully:", newProduct);
+        console.log("Producto añadido correctamente:", newProduct);
       }
       set((state) => ({
         allProducts: [...state.allProducts, newProduct],
       }));
       return { success: true };
     } catch (error) {
-      console.error("Error adding product:", error);
+      console.error("Error al agregar el producto:", error);
       return { success: false };
     } finally {
       set({ isLoading: false });
@@ -127,11 +127,11 @@ export const useProductStore = create<ProductState>((set) => ({
 
       // Debug log - only log in development
       if (process.env.NODE_ENV === "development") {
-        console.log("Product updated successfully:", newProduct);
+        console.log("Producto actualizado correctamente:", newProduct);
       }
       return { success: true };
     } catch (error) {
-      console.error("Error updating product:", error);
+      console.error("Error al actualizar el producto:", error);
       return { success: false };
     } finally {
       set({ isLoading: false });
@@ -154,10 +154,10 @@ export const useProductStore = create<ProductState>((set) => ({
         }));
         return { success: true };
       } else {
-        throw new Error("Failed to delete product");
+        throw new Error("Error al eliminar el producto");
       }
     } catch (error) {
-      console.error("Error deleting product:", error);
+      console.error("Error al eliminar el producto:", error);
       return { success: false };
     } finally {
       set({ isLoading: false });
@@ -171,10 +171,10 @@ export const useProductStore = create<ProductState>((set) => ({
       set({ categories: response.data });
       // Debug log - only log in development
       if (process.env.NODE_ENV === "development") {
-        console.log("Categories loaded successfully:", response.data);
+        console.log("Categorías cargadas correctamente:", response.data);
       }
     } catch (error) {
-      console.error("Error loading categories:", error);
+      console.error("Error al cargar las categorías:", error);
     }
   },
 
@@ -207,10 +207,10 @@ export const useProductStore = create<ProductState>((set) => ({
       set({ suppliers: response.data });
       // Debug log - only log in development
       if (process.env.NODE_ENV === "development") {
-        console.log("Suppliers loaded successfully:", response.data);
+        console.log("Proveedores cargados correctamente:", response.data);
       }
     } catch (error) {
-      console.error("Error loading suppliers:", error);
+      console.error("Error al cargar los proveedores:", error);
     }
   },
 

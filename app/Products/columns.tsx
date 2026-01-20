@@ -168,31 +168,31 @@ export const columns: ColumnDef<Product>[] = [
       return <span>{supplierName || "Desconocido"}</span>;
     },
   },
-  {
-    id: "qrCode",
-    header: "Código QR",
-    cell: ({ row }) => {
-      const product = row.original;
-      const qrData = JSON.stringify({
-        id: product.id,
-        name: product.name,
-        sku: product.sku,
-        price: product.price,
-        quantity: product.quantity,
-        status: product.status,
-        category: product.category,
-        supplier: product.supplier,
-      });
+  // {
+  //   id: "qrCode",
+  //   header: "Código QR",
+  //   cell: ({ row }) => {
+  //     const product = row.original;
+  //     const qrData = JSON.stringify({
+  //       id: product.id,
+  //       name: product.name,
+  //       sku: product.sku,
+  //       price: product.price,
+  //       quantity: product.quantity,
+  //       status: product.status,
+  //       category: product.category,
+  //       supplier: product.supplier,
+  //     });
 
-      return (
-        <QRCodeHover
-          data={qrData}
-          title={`${product.name} QR`}
-          size={200}
-        />
-      );
-    },
-  },
+  //     return (
+  //       <QRCodeHover
+  //         data={qrData}
+  //         title={`${product.name} QR`}
+  //         size={200}
+  //       />
+  //     );
+  //   },
+  // },
   {
     id: "actions",
     cell: ({ row }) => {

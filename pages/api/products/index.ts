@@ -29,7 +29,7 @@ export default async function handler(
         });
 
         if (existingProduct) {
-          return res.status(400).json({ error: "SKU must be unique" });
+          return res.status(400).json({ error: "SKU debe ser único" });
         }
 
         // Use Prisma for product creation to ensure consistency
@@ -67,11 +67,11 @@ export default async function handler(
           categoryId: product.categoryId,
           supplierId: product.supplierId,
           createdAt: product.createdAt.toISOString(),
-          category: category?.name || "Unknown",
-          supplier: supplier?.name || "Unknown",
+          category: category?.name || "Desconocido",
+          supplier: supplier?.name || "Desconocido",
         });
       } catch (error) {
-        res.status(500).json({ error: "Failed to create product" });
+        res.status(500).json({ error: "Fallo al crear el producto" });
       }
       break;
 
@@ -83,7 +83,7 @@ export default async function handler(
 
         // Debug log - only log in development
         if (process.env.NODE_ENV === 'development') {
-          console.log("Raw products from database:", products);
+          console.log("Productos sin procesar desde la base de datos:", products);
         }
 
         // Fetch category and supplier data separately
@@ -100,15 +100,15 @@ export default async function handler(
               ...product,
               quantity: Number(product.quantity), // Convert BigInt to Number
               createdAt: product.createdAt.toISOString(), // Convert `createdAt` to ISO string
-              category: category?.name || "Unknown", // Transform category to string
-              supplier: supplier?.name || "Unknown", // Transform supplier to string
+              category: category?.name || "Desconocido", // Transform category to string
+              supplier: supplier?.name || "Desconocido", // Transform supplier to string
             };
           })
         );
 
         res.status(200).json(transformedProducts);
       } catch (error) {
-        res.status(500).json({ error: "Failed to fetch products" });
+        res.status(500).json({ error: "Fallo al obtener los productos" });
       }
       break;
 
@@ -158,11 +158,11 @@ export default async function handler(
           categoryId: updatedProduct.categoryId,
           supplierId: updatedProduct.supplierId,
           createdAt: updatedProduct.createdAt.toISOString(),
-          category: category?.name || "Unknown",
-          supplier: supplier?.name || "Unknown",
+          category: category?.name || "Desconocido",
+          supplier: supplier?.name || "Desconocido",
         });
       } catch (error) {
-        res.status(500).json({ error: "Failed to update product" });
+        res.status(500).json({ error: "Fallo al actualizar el producto" });
       }
       break;
 
@@ -176,7 +176,7 @@ export default async function handler(
 
         res.status(204).end();
       } catch (error) {
-        res.status(500).json({ error: "Failed to delete product" });
+        res.status(500).json({ error: "Fallo al eliminar el producto" });
       }
       break;
 

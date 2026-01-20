@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartCard } from "@/components/ui/chart-card";
 import { ForecastingCard } from "@/components/ui/forecasting-card";
-import { QRCodeComponent } from "@/components/ui/qr-code";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -18,7 +17,6 @@ import {
   Eye,
   Package,
   PieChart as PieChartIcon,
-  QrCode,
   ShoppingCart,
   TrendingDown,
   TrendingUp,
@@ -52,16 +50,17 @@ export default function BusinessInsightsPage() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Calculate analytics data with corrected calculations
+  // Calculate analytics data customized for Hair Salon (Peluquería)
   const analyticsData = useMemo(() => {
     if (!allProducts || allProducts.length === 0) {
       return {
-        totalProducts: 0,
+        totalReferenceTypes: 0, // Antes totalProducts
         totalValue: 0,
         lowStockItems: 0,
+        criticalStockItems: 0, // Nueva métrica para urgencias
         outOfStockItems: 0,
-        averagePrice: 0,
-        totalQuantity: 0,
+        averageUnitCost: 0, // Reemplaza a averagePrice / valueDensity
+        totalUnits: 0, // Antes totalQuantity
         categoryDistribution: [],
         statusDistribution: [],
         priceRangeDistribution: [],
@@ -69,56 +68,51 @@ export default function BusinessInsightsPage() {
         topProducts: [],
         lowStockProducts: [],
         stockUtilization: 0,
-        valueDensity: 0,
-        stockCoverage: 0,
+        unitsPerReference: 0, // Reemplaza stockCoverage
       };
     }
 
-    const totalProducts = allProducts.length;
+    // 1. Total de "Tipos" de producto (Referencias distintas: Tinte rojo, Champú X, Cera Y)
+    const totalReferenceTypes = allProducts.length;
 
-    // CORRECTED: Total value calculation - sum of (price * quantity) for each product
+    // 2. Valor Total del Inventario (Dinero parado en la estantería)
     const totalValue = allProducts.reduce((sum, product) => {
       return sum + product.price * Number(product.quantity);
     }, 0);
 
-    // CORRECTED: Low stock items - products with quantity > 0 AND quantity <= 20 (matching product table logic)
-    const lowStockItems = allProducts.filter(
-      (product) =>
-        Number(product.quantity) > 0 && Number(product.quantity) <= 20
+    // 3. Cantidad Total de Unidades (Botes, tubos, cajas totales)
+    const totalUnits = allProducts.reduce((sum, product) => {
+      return sum + Number(product.quantity);
+    }, 0);
+
+    // 4. Coste Medio por Unidad (Métrica CRÍTICA para peluquería)
+    // Responde: ¿Cuánto me cuesta de media un bote en mi estantería?
+    // Total Valor / Total Unidades físicas.
+    const averageUnitCost = totalUnits > 0 ? totalValue / totalUnits : 0;
+
+    // 5. Lógica de Stock Bajo (Ajustada para peluquería)
+    // Crítico: Menos de 3 unidades (Peligro de quedarse sin tinte a mitad de servicio)
+    // Bajo: Entre 3 y 10 unidades.
+    const criticalStockItems = allProducts.filter(
+      (product) => Number(product.quantity) > 0 && Number(product.quantity) <= 3
     ).length;
 
-    // CORRECTED: Out of stock items - products with quantity = 0
+    const lowStockItems = allProducts.filter(
+      (product) => Number(product.quantity) > 3 && Number(product.quantity) <= 10
+    ).length;
+
     const outOfStockItems = allProducts.filter(
       (product) => Number(product.quantity) === 0
     ).length;
 
-    // CORRECTED: Total quantity - sum of all quantities
-    const totalQuantity = allProducts.reduce((sum, product) => {
-      return sum + Number(product.quantity);
-    }, 0);
+    // 6. Unidades Promedio por Referencia
+    // ¿Tengo mucha profundidad de stock o poca?
+    const unitsPerReference = totalReferenceTypes > 0 ? totalUnits / totalReferenceTypes : 0;
 
-    // CORRECTED: Average price calculation - total value divided by total quantity
-    const averagePrice = totalQuantity > 0 ? totalValue / totalQuantity : 0;
-
-    // CORRECTED: Stock utilization - percentage of products that are not out of stock
-    const stockUtilization =
-      totalProducts > 0
-        ? ((totalProducts - outOfStockItems) / totalProducts) * 100
-        : 0;
-
-    // CORRECTED: Value density - total value divided by total products
-    const valueDensity = totalProducts > 0 ? totalValue / totalProducts : 0;
-
-    // CORRECTED: Stock coverage - average quantity per product
-    const stockCoverage = totalProducts > 0 ? totalQuantity / totalProducts : 0;
-
-    // Category distribution based on quantity (not just count)
-    const categoryMap = new Map<
-      string,
-      { count: number; quantity: number; value: number }
-    >();
+    // Distribución por Categoría (Basada en Valor, para ver dónde gastas más dinero)
+    const categoryMap = new Map();
     allProducts.forEach((product) => {
-      const category = product.category || "Unknown";
+      const category = product.category || "Sin Categoría";
       const current = categoryMap.get(category) || {
         count: 0,
         quantity: 0,
@@ -131,50 +125,49 @@ export default function BusinessInsightsPage() {
       });
     });
 
-    // Convert to percentage based on quantity
     const categoryDistribution = Array.from(categoryMap.entries()).map(
       ([name, data]) => ({
         name,
-        value: data.quantity,
+        value: data.value, // Gráfico basado en VALOR (€)
+        quantity: data.quantity,
         count: data.count,
-        totalValue: data.value,
       })
     );
 
+    // Price range distribution (Simplificado para productos de consumo)
+    const priceRanges = [
+      { name: "€0-€10", min: 0, max: 10 }, // Consumibles baratos (oxidantes)
+      { name: "€10-€25", min: 10, max: 25 }, // Champús/Tintes premium
+      { name: "€25-€50", min: 25, max: 50 }, // Tratamientos
+      { name: "€50+", min: 50, max: Infinity }, // Packs o herramientas
+    ];
+
+    const priceRangeDistribution = priceRanges.map((range) => ({
+      name: range.name,
+      value: allProducts.filter((product) => {
+        if (range.max === Infinity) return product.price >= range.min;
+        return product.price >= range.min && product.price < range.max;
+      }).length,
+    }));
+
     // Status distribution
-    const statusMap = new Map<string, number>();
+    const statusMap = new Map();
     allProducts.forEach((product) => {
-      const status = product.status || "Unknown";
-      statusMap.set(status, (statusMap.get(status) || 0) + 1);
+        // Calculamos estado basado en cantidad si no existe campo status
+        let status = product.status;
+        if (!status) {
+            const qty = Number(product.quantity);
+            if (qty === 0) status = "Agotado";
+            else if (qty <= 3) status = "Crítico";
+            else if (qty <= 10) status = "Bajo";
+            else status = "Saludable";
+        }
+        statusMap.set(status, (statusMap.get(status) || 0) + 1);
     });
+    
     const statusDistribution = Array.from(statusMap.entries()).map(
       ([name, value]) => ({ name, value })
     );
-
-    // Price range distribution
-    const priceRanges = [
-      { name: "€0-€100", min: 0, max: 100 },
-      { name: "€100-€500", min: 100, max: 500 },
-      { name: "€500-€1000", min: 500, max: 1000 },
-      { name: "€1000-€2000", min: 1000, max: 2000 },
-      { name: "€2000+", min: 2000, max: Infinity },
-    ];
-
-    const priceRangeDistribution = priceRanges.map((range, index) => ({
-      name: range.name,
-      value: allProducts.filter((product) => {
-        if (range.name === "€2000+") {
-          // For €2000+ range, include products > €2000 (not including €2000)
-          return product.price > 2000;
-        } else if (range.name === "€1000-€2000") {
-          // For €1000-€2000 range, include products >= €1000 and <= €2000
-          return product.price >= range.min && product.price <= range.max;
-        } else {
-          // For other ranges, include products >= min and < max (exclusive upper bound)
-          return product.price >= range.min && product.price < range.max;
-        }
-      }).length,
-    }));
 
     // CORRECTED: Monthly trend based on actual product creation dates
     const monthlyTrend: Array<{
@@ -198,67 +191,47 @@ export default function BusinessInsightsPage() {
     ];
 
     // Group products by creation month using UTC to avoid timezone issues
-    const productsByMonth = new Map<string, number>();
-    allProducts.forEach((product) => {
-      const date = new Date(product.createdAt);
-      // Use UTC methods to ensure consistent month extraction
-      const monthKey = `${date.getUTCFullYear()}-${String(
-        date.getUTCMonth() + 1
-      ).padStart(2, "0")}`;
-      productsByMonth.set(monthKey, (productsByMonth.get(monthKey) || 0) + 1);
-    });
+    const productsByMonth = new Map();
+     allProducts.forEach((product) => {
+       const date = new Date(product.createdAt);
+       const monthKey = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+       productsByMonth.set(monthKey, (productsByMonth.get(monthKey) || 0) + 1);
+     });
+     const dataYear = allProducts.length > 0 ? new Date(allProducts[0].createdAt).getUTCFullYear() : new Date().getUTCFullYear();
+     let cumulativeProducts = 0;
+     months.forEach((month, index) => {
+       const monthKey = `${dataYear}-${String(index + 1).padStart(2, "0")}`;
+       const productsThisMonth = productsByMonth.get(monthKey) || 0;
+       cumulativeProducts += productsThisMonth;
+       monthlyTrend.push({ month, products: cumulativeProducts, monthlyAdded: productsThisMonth });
+     });
 
-    // Create trend data for the whole year
-    // Use the year from the first product's creation date to ensure correct year mapping
-    const dataYear =
-      allProducts.length > 0
-        ? new Date(allProducts[0].createdAt).getUTCFullYear()
-        : new Date().getUTCFullYear();
-    let cumulativeProducts = 0;
 
-    months.forEach((month, index) => {
-      const monthKey = `${dataYear}-${String(index + 1).padStart(2, "0")}`;
-      const productsThisMonth = productsByMonth.get(monthKey) || 0;
-      cumulativeProducts += productsThisMonth;
-
-      monthlyTrend.push({
-        month,
-        products: cumulativeProducts,
-        monthlyAdded: productsThisMonth,
-      });
-    });
-
-    // Top products by value
+    // Top Products: Ahora muestra los que tienen más DINERO INMOVILIZADO
     const topProducts = allProducts
-      .sort(
-        (a, b) => b.price * Number(b.quantity) - a.price * Number(a.quantity)
-      )
+      .sort((a, b) => (b.price * Number(b.quantity)) - (a.price * Number(a.quantity)))
       .slice(0, 5)
       .map((product) => ({
         name: product.name,
-        value: product.price * Number(product.quantity),
+        value: product.price * Number(product.quantity), // Valor total de ese producto
         quantity: Number(product.quantity),
       }));
 
-    // Low stock products (matching product table logic: quantity > 0 AND quantity <= 20)
+    // Low stock products (Prioriza mostrar los CRÍTICOS)
     const lowStockProducts = allProducts
-      .filter(
-        (product) =>
-          Number(product.quantity) > 0 && Number(product.quantity) <= 20
-      )
-      .sort((a, b) => Number(a.quantity) - Number(b.quantity))
-      .slice(0, 5);
+      .filter((product) => Number(product.quantity) > 0 && Number(product.quantity) <= 10)
+      .sort((a, b) => Number(a.quantity) - Number(b.quantity)) // Menor cantidad primero
+      .slice(0, 6);
 
     return {
-      totalProducts,
+      totalReferenceTypes,
       totalValue,
       lowStockItems,
+      criticalStockItems,
       outOfStockItems,
-      averagePrice,
-      totalQuantity,
-      stockUtilization,
-      valueDensity,
-      stockCoverage,
+      averageUnitCost,
+      totalUnits,
+      unitsPerReference,
       categoryDistribution,
       statusDistribution,
       priceRangeDistribution,
@@ -270,8 +243,8 @@ export default function BusinessInsightsPage() {
 
   const handleExportAnalytics = () => {
     toast({
-      title: "Exportar Análisis",
-      description: "¡La función de exportación de análisis estará disponible pronto!",
+      title: "Exportar Inventario",
+      description: "Descargando informe de stock...",
     });
   };
 
@@ -280,9 +253,7 @@ export default function BusinessInsightsPage() {
       <AuthenticatedLayout>
         <div className="container mx-auto p-6">
           <div className="flex items-center justify-center h-64">
-            <p className="text-muted-foreground">
-              Por favor, inicia sesión para ver los análisis de negocio.
-            </p>
+            <p className="text-muted-foreground">Cargando datos del salón...</p>
           </div>
         </div>
       </AuthenticatedLayout>
@@ -296,66 +267,69 @@ export default function BusinessInsightsPage() {
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold text-primary">
-              Análisis de Negocio
+              Control de Stock
             </h1>
             <p className="text-lg text-muted-foreground">
-              Información completa sobre el rendimiento de tu inventario
+              Visión general de productos de consumo y venta
             </p>
           </div>
-          <Button
-            onClick={handleExportAnalytics}
-            className="flex items-center gap-2"
-          >
+          <Button onClick={handleExportAnalytics} className="flex items-center gap-2">
             <Download className="h-4 w-4" />
-            Exportar Análisis
+            Exportar Excel
           </Button>
         </div>
 
-        {/* Key Metrics */}
+        {/* Key Metrics - PELUQUERÍA */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <AnalyticsCard
-            title="Total de Productos"
-            value={analyticsData.totalProducts}
+            title="Total Unidades"
+            value={analyticsData.totalUnits.toLocaleString()}
             icon={Package}
             iconColor="text-blue-600"
-            description="Productos en inventario"
+            description={`${analyticsData.totalReferenceTypes} tipos de productos`}
           />
           <AnalyticsCard
-            title="Valor Total"
-            value={`€${analyticsData.totalValue.toLocaleString()}`}
+            title="Valor del Stock"
+            value={`€${analyticsData.totalValue.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}`}
             icon={DollarSign}
             iconColor="text-green-600"
-            description="Valor total del inventario"
+            description="Dinero invertido en material"
           />
           <AnalyticsCard
-            title="Artículos con Stock Bajo"
+            title="Stock Bajo (<10)"
             value={analyticsData.lowStockItems}
             icon={AlertTriangle}
             iconColor="text-orange-600"
-            description="Artículos con cantidad <= 20"
+            description="Productos por agotarse"
           />
-          <AnalyticsCard
-            title="Sin Stock"
-            value={analyticsData.outOfStockItems}
+           <AnalyticsCard
+            title="Stock Crítico (<3)"
+            value={analyticsData.criticalStockItems + analyticsData.outOfStockItems}
             icon={ShoppingCart}
             iconColor="text-red-600"
-            description="Artículos con cantidad cero"
+            description="Reponer urgentemente"
           />
         </div>
 
         {/* Charts and Insights */}
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Resumen</TabsTrigger>
-            <TabsTrigger value="distribution">Distribución</TabsTrigger>
-            <TabsTrigger value="trends">Tendencias</TabsTrigger>
-            <TabsTrigger value="alerts">Alertas</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="overview">Resumen General</TabsTrigger>
+            <TabsTrigger value="trends">Productos Top</TabsTrigger>
+            <TabsTrigger value="alerts">
+                 Alertas de Compra
+                 {analyticsData.criticalStockItems > 0 && (
+                    <Badge variant="destructive" className="ml-2 h-5 w-5 rounded-full p-0 flex justify-center items-center">
+                        {analyticsData.criticalStockItems}
+                    </Badge>
+                 )}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {/* Category Distribution */}
-              <ChartCard title="Distribución por Categoría" icon={PieChartIcon}>
+              {/* Category Distribution - Value based */}
+              <ChartCard title="Dinero invertido por Categoría" icon={PieChartIcon}>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
@@ -363,74 +337,29 @@ export default function BusinessInsightsPage() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) =>
-                        `${name} ${((percent || 0) * 100).toFixed(0)}%`
-                      }
+                      label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                       outerRadius={80}
                       fill="#8884d8"
-                      dataKey="value"
+                      dataKey="value" // Usamos valor monetario, no cantidad
                     >
-                      {analyticsData.categoryDistribution.map(
-                        (entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        )
-                      )}
+                      {analyticsData.categoryDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip formatter={(value) => `€${Number(value).toFixed(2)}`} />
                   </PieChart>
                 </ResponsiveContainer>
               </ChartCard>
 
-              {/* Monthly Trend - Full Year */}
-              <ChartCard
-                title="Tendencia de Crecimiento de Productos (Año Completo)"
-                icon={TrendingUp}
-              >
-                <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={analyticsData.monthlyTrend}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area
-                      type="monotone"
-                      dataKey="products"
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </ChartCard>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="distribution" className="space-y-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {/* Status Distribution */}
-              <ChartCard title="Distribución por Estado" icon={Activity}>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={analyticsData.statusDistribution}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#8884d8" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </ChartCard>
-
-              {/* Price Range Distribution */}
-              <ChartCard title="Distribución por Rango de Precio" icon={BarChart3}>
+               {/* Price Range */}
+               <ChartCard title="Rango de Coste de Productos" icon={BarChart3}>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={analyticsData.priceRangeDistribution}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
-                    <Bar dataKey="value" fill="#00C49F" />
+                    <Bar dataKey="value" fill="#00C49F" name="Cantidad de productos" />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
@@ -438,73 +367,55 @@ export default function BusinessInsightsPage() {
           </TabsContent>
 
           <TabsContent value="trends" className="space-y-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {/* Top Products by Value */}
-              <ChartCard title="Productos Principales por Valor" icon={TrendingUp}>
+            <div className="grid grid-cols-1 gap-4">
+              <ChartCard title="Productos con mayor valor acumulado (€ en estantería)" icon={TrendingUp}>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart
                     data={analyticsData.topProducts}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip
-                      formatter={(value) => [
-                        `€${value.toLocaleString()}`,
-                        "Valor",
-                      ]}
-                      labelFormatter={(label) => `Producto: ${label}`}
-                    />
+                    <XAxis type="number" />
+                    <YAxis dataKey="name" type="category" width={150} />
+                    <Tooltip formatter={(value) => [`€${value.toLocaleString()}`, "Valor Total"]} />
                     <Bar dataKey="value" fill="#FFBB28" />
                   </BarChart>
-                </ResponsiveContainer>
-              </ChartCard>
-
-              {/* Monthly Product Addition Trend */}
-              <ChartCard title="Adición Mensual de Productos" icon={TrendingDown}>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={analyticsData.monthlyTrend}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line
-                      type="monotone"
-                      dataKey="monthlyAdded"
-                      stroke="#FF8042"
-                      strokeWidth={2}
-                    />
-                  </LineChart>
                 </ResponsiveContainer>
               </ChartCard>
             </div>
           </TabsContent>
 
           <TabsContent value="alerts" className="space-y-4">
-            {/* Low Stock Alerts */}
-            <ChartCard title="Alertas de Stock Bajo" icon={AlertTriangle}>
+            <ChartCard title="Productos que necesitan reposición" icon={AlertTriangle}>
               <div className="space-y-4">
-                {analyticsData.lowStockProducts.length > 0 ? (
+                {(analyticsData.lowStockProducts.length > 0) ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {analyticsData.lowStockProducts.map((product, index) => (
                       <Card
                         key={index}
-                        className="border-orange-200 bg-orange-50 dark:bg-orange-950/20"
+                        className={`${
+                            Number(product.quantity) <= 3 
+                            ? "border-red-200 bg-red-50" 
+                            : "border-orange-200 bg-orange-50"
+                        }`}
                       >
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div>
-                              <h4 className="font-semibold text-sm">
+                              <h4 className="font-semibold text-sm truncate w-32" title={product.name}>
                                 {product.name}
                               </h4>
                               <p className="text-xs text-muted-foreground">
-                                SKU: {product.sku}
+                                €{product.price} / ud.
                               </p>
                             </div>
-                            <Badge variant="destructive" className="text-xs">
-                              {product.quantity} restantes
-                            </Badge>
+                            <div className="text-right">
+                                <span className={`text-2xl font-bold ${Number(product.quantity) <= 3 ? "text-red-600" : "text-orange-600"}`}>
+                                    {product.quantity}
+                                </span>
+                                <p className="text-xs text-muted-foreground">unidades</p>
+                            </div>
                           </div>
                         </CardContent>
                       </Card>
@@ -512,10 +423,7 @@ export default function BusinessInsightsPage() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <AlertTriangle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                    <p className="text-muted-foreground">
-                      ¡No hay alertas de stock bajo en este momento!
-                    </p>
+                    <p className="text-muted-foreground">¡Todo en orden! No hay stock bajo mínimos.</p>
                   </div>
                 )}
               </div>
@@ -523,91 +431,58 @@ export default function BusinessInsightsPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Additional Insights */}
+        {/* Additional Insights - REFORMULADO PARA PELUQUERÍA */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-base">
                 <Eye className="h-5 w-5" />
-                Información Rápida
+                Resumen de Costes
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm">Precio Promedio</span>
-                <span className="font-semibold">
-                  ${analyticsData.averagePrice.toFixed(2)}
+                <span className="text-sm text-muted-foreground">Coste Medio (por unidad)</span>
+                <span className="font-bold text-lg">
+                  €{analyticsData.averageUnitCost.toFixed(2)}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Cantidad Total</span>
-                <span className="font-semibold">
-                  {analyticsData.totalQuantity.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Utilización de Stock</span>
-                <span className="font-semibold">
-                  {analyticsData.stockUtilization.toFixed(1)}%
-                </span>
-              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Este es el precio medio de cada bote/caja que tienes en el salón.
+              </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-base">
                 <Users className="h-5 w-5" />
-                Rendimiento
+                Salud del Stock
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm">Salud del Inventario</span>
+                <span className="text-sm text-muted-foreground">Estado General</span>
                 <Badge
                   variant={
-                    analyticsData.lowStockItems > 5 ? "destructive" : "default"
+                    analyticsData.criticalStockItems > 0 ? "destructive" : "default"
                   }
                 >
-                  {analyticsData.lowStockItems > 5
-                    ? "Requiere Atención"
-                    : "Saludable"}
+                  {analyticsData.criticalStockItems > 0
+                    ? `Faltan ${analyticsData.criticalStockItems} productos`
+                    : "Stock Sano"}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Cobertura de Stock</span>
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-sm text-muted-foreground">Media de unidades por tipo</span>
                 <span className="font-semibold">
-                  {analyticsData.stockCoverage.toFixed(1)} unidades prom.
+                  {analyticsData.unitsPerReference.toFixed(1)} uds.
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Densidad de Valor</span>
-                <span className="font-semibold">
-                  ${analyticsData.valueDensity.toFixed(2)} por producto
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <QrCode className="h-5 w-5" />
-                Código QR Rápido
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <QRCodeComponent
-                data={`${window.location.origin}/business-insights`}
-                title="QR del Panel"
-                size={120}
-                showDownload={false}
-              />
             </CardContent>
           </Card>
         </div>
 
-        {/* Forecasting Section */}
         <ForecastingCard products={allProducts} />
       </div>
     </AuthenticatedLayout>

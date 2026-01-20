@@ -17,7 +17,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return res.status(405).json({ error: "Método no permitido" });
   }
 
   try {
@@ -25,7 +25,7 @@ export default async function handler(
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: "El usuario ya existe" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -64,7 +64,7 @@ export default async function handler(
     });
 
     if (!createdUser) {
-      return res.status(500).json({ error: "Failed to create user" });
+      return res.status(500).json({ error: "Fallo al crear el usuario" });
     }
 
     res.status(201).json({ id: createdUser.id, name: createdUser.name, email: createdUser.email });
@@ -72,7 +72,7 @@ export default async function handler(
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
     } else {
-      res.status(500).json({ error: "An unknown error occurred" });
+      res.status(500).json({ error: "Ocurrió un error desconocido" });
     }
   }
 }

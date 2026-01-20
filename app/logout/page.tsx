@@ -31,8 +31,8 @@ export default function Logout() {
     } catch (error) {
       // Show error toast
       toast({
-        title: "Logout Failed",
-        description: "Failed to logout. Please try again.",
+        title: "Error al cerrar sesión",
+        description: "Fallo al cerrar sesión. Por favor, inténtelo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -42,7 +42,7 @@ export default function Logout() {
 
   return (
     <Button onClick={handleLogout} disabled={isLoggingOut} className="w-full">
-      {isLoggingOut ? "Logging Out..." : "Logout"}
+      {isLoggingOut ? "Cerrando sesión..." : "Cerrar sesión"}
     </Button>
   );
 }
