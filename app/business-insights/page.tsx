@@ -12,7 +12,7 @@ import {
   Activity,
   AlertTriangle,
   BarChart3,
-  DollarSign,
+  Euro,
   Download,
   Eye,
   Package,
@@ -50,7 +50,7 @@ export default function BusinessInsightsPage() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Calculate analytics data customized for Hair Salon (Peluquería)
+  // Calculate analytics data customized for Hair Salon (Barber)
   const analyticsData = useMemo(() => {
     if (!allProducts || allProducts.length === 0) {
       return {
@@ -85,12 +85,12 @@ export default function BusinessInsightsPage() {
       return sum + Number(product.quantity);
     }, 0);
 
-    // 4. Coste Medio por Unidad (Métrica CRÍTICA para peluquería)
+    // 4. Coste Medio por Unidad (Métrica CRÍTICA para barberías)
     // Responde: ¿Cuánto me cuesta de media un bote en mi estantería?
     // Total Valor / Total Unidades físicas.
     const averageUnitCost = totalUnits > 0 ? totalValue / totalUnits : 0;
 
-    // 5. Lógica de Stock Bajo (Ajustada para peluquería)
+    // 5. Lógica de Stock Bajo (Ajustada para barberías)
     // Crítico: Menos de 3 unidades (Peligro de quedarse sin tinte a mitad de servicio)
     // Bajo: Entre 3 y 10 unidades.
     const criticalStockItems = allProducts.filter(
@@ -253,7 +253,7 @@ export default function BusinessInsightsPage() {
       <AuthenticatedLayout>
         <div className="container mx-auto p-6">
           <div className="flex items-center justify-center h-64">
-            <p className="text-muted-foreground">Cargando datos del salón...</p>
+            <p className="text-muted-foreground">Cargando datos de la barbería...</p>
           </div>
         </div>
       </AuthenticatedLayout>
@@ -270,7 +270,7 @@ export default function BusinessInsightsPage() {
               Control de Stock
             </h1>
             <p className="text-lg text-muted-foreground">
-              Visión general de productos de consumo y venta
+              Visión general de productos de consumo y venta de la barbería
             </p>
           </div>
           <Button onClick={handleExportAnalytics} className="flex items-center gap-2">
@@ -279,7 +279,7 @@ export default function BusinessInsightsPage() {
           </Button>
         </div>
 
-        {/* Key Metrics - PELUQUERÍA */}
+        {/* Key Metrics - BARBERÍA */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <AnalyticsCard
             title="Total Unidades"
@@ -291,7 +291,7 @@ export default function BusinessInsightsPage() {
           <AnalyticsCard
             title="Valor del Stock"
             value={`€${analyticsData.totalValue.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}`}
-            icon={DollarSign}
+            icon={Euro}
             iconColor="text-green-600"
             description="Dinero invertido en material"
           />
@@ -300,7 +300,7 @@ export default function BusinessInsightsPage() {
             value={analyticsData.lowStockItems}
             icon={AlertTriangle}
             iconColor="text-orange-600"
-            description="Productos por agotarse"
+            description="Productos cerca de agotarse"
           />
            <AnalyticsCard
             title="Stock Crítico (<3)"
@@ -431,7 +431,7 @@ export default function BusinessInsightsPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Additional Insights - REFORMULADO PARA PELUQUERÍA */}
+        {/* Additional Insights - REFORMULADO PARA BARBERÍA */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <Card>
             <CardHeader>
@@ -448,7 +448,7 @@ export default function BusinessInsightsPage() {
                 </span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Este es el precio medio de cada bote/caja que tienes en el salón.
+                Este es el precio medio de cada bote/caja que tienes en la barbería.
               </p>
             </CardContent>
           </Card>

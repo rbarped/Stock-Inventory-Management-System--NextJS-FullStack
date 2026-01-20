@@ -29,7 +29,7 @@ interface ForecastData {
   reorderSuggestions: Array<{
     product: Product;
     suggestedQuantity: number;
-    urgency: "high" | "medium" | "low";
+    urgency: "alta" | "media" | "baja";
     reason: string;
   }>;
   demandForecast: Array<{
@@ -72,21 +72,21 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
       .filter((product) => product.quantity <= 5)
       .map((product) => {
         let suggestedQuantity = 20;
-        let urgency: "high" | "medium" | "low" = "medium";
-        let reason = "Low stock level";
+        let urgency: "alta" | "media" | "baja" = "media";
+        let reason = "Nivel de stock bajo";
 
         if (product.quantity === 0) {
           suggestedQuantity = 30;
-          urgency = "high";
-          reason = "Out of stock";
+          urgency = "alta";
+          reason = "Agotado";
         } else if (product.quantity <= 2) {
           suggestedQuantity = 25;
-          urgency = "high";
-          reason = "Critical stock level";
+          urgency = "alta";
+          reason = "Nivel de stock crítico";
         } else if (product.quantity <= 5) {
           suggestedQuantity = 20;
-          urgency = "medium";
-          reason = "Low stock level";
+          urgency = "media";
+          reason = "Nivel de stock bajo";
         }
 
         return {
@@ -101,7 +101,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
     // Generate demand forecast by category
     const categoryMap = new Map<string, Product[]>();
     products.forEach((product) => {
-      const category = product.category || "Unknown";
+      const category = product.category || "Desconocido";
       if (!categoryMap.has(category)) {
         categoryMap.set(category, []);
       }
@@ -148,7 +148,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
       "Sep",
       "Oct",
       "Nov",
-      "Dec",
+      "Dic",
     ];
 
     // Group products by creation month for seasonal trends
@@ -214,25 +214,25 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
 
   const handleGenerateReport = () => {
     toast({
-      title: "Generate Report",
-      description: "Report generation feature coming soon!",
+      title: "Generar Informe",
+      description: "La función de generación de informes estará disponible pronto.",
     });
   };
 
   const handleViewDetails = () => {
     toast({
-      title: "View Details",
-      description: "Detailed view feature coming soon!",
+      title: "Ver Detalles",
+      description: "La función de vista detallada estará disponible pronto.",
     });
   };
 
   const getUrgencyColor = (urgency: string) => {
     switch (urgency) {
-      case "high":
+      case "alta":
         return "text-red-600 bg-red-100";
-      case "medium":
+      case "media":
         return "text-orange-600 bg-orange-100";
-      case "low":
+      case "baja":
         return "text-yellow-600 bg-yellow-100";
       default:
         return "text-gray-600 bg-gray-100";
