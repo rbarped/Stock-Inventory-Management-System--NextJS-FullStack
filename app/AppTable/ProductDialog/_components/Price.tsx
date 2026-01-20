@@ -15,7 +15,7 @@ export default function Price() {
   return (
     <div className="flex flex-col gap-2 pt-[6px]">
       <Label htmlFor="price" className="text-slate-600">
-        Price
+        Precio
       </Label>
       <Controller
         name="price"
@@ -27,7 +27,7 @@ export default function Price() {
             value={value}
             customInput={Input}
             thousandSeparator
-            placeholder="Price..."
+            placeholder="Precio..."
             className="h-11"
             decimalScale={2}
             allowNegative={false}

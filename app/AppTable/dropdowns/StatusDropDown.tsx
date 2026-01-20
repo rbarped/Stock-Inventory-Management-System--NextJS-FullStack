@@ -24,9 +24,9 @@ type Status = {
 };
 
 const statuses: Status[] = [
-  { value: "Available", label: "Available", icon: <FaCheck /> },
-  { value: "Stock Out", label: "Stock Out", icon: <IoClose /> },
-  { value: "Stock Low", label: "Stock Low", icon: <LuGitPullRequestDraft /> },
+  { value: "Available", label: "Disponible", icon: <FaCheck /> },
+  { value: "Stock Out", label: "Agotado", icon: <IoClose /> },
+  { value: "Stock Low", label: "Bajo Stock", icon: <LuGitPullRequestDraft /> },
 ];
 
 type StatusDropDownProps = {
@@ -73,7 +73,7 @@ export function StatusDropDown({
         <PopoverTrigger asChild>
           <Button variant="secondary" className="h-10">
             <LuGitPullRequestDraft />
-            Status
+            Estado
           </Button>
         </PopoverTrigger>
         <PopoverContent
@@ -115,7 +115,7 @@ export function StatusDropDown({
                 className="text-[12px] mb-1"
                 onClick={clearFilters}
               >
-                Clear Filters
+                Limpiar filtros
               </Button>
             </div>
           </Command>

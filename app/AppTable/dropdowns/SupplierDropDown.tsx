@@ -57,15 +57,15 @@ export function SuppliersDropDown({
         <PopoverTrigger asChild>
           <Button variant={"secondary"} className="h-10">
             <LuGitPullRequestDraft />
-            Suppliers
+            Proveedores
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0 w-56 poppins" side="bottom" align="end">
           <Command className="p-1">
-            <CommandInput placeholder="Supplier" />
+            <CommandInput placeholder="Proveedor" />
             <CommandList>
               <CommandEmpty className="text-slate-500 text-sm text-center p-5">
-                No supplier found.
+                No se encontró ningún proveedor.
               </CommandEmpty>
               <CommandGroup>
                 {suppliers.map((supplier) => (
@@ -91,7 +91,7 @@ export function SuppliersDropDown({
                 variant={"ghost"}
                 className="text-[12px] mb-1"
               >
-                Clear Filters
+                Limpiar filtros
               </Button>
             </div>
           </Command>

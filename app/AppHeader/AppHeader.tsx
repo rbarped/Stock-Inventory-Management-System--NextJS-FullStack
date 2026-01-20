@@ -22,8 +22,8 @@ export default function AppHeader() {
       await logout();
 
       toast({
-        title: "Logout Successful!",
-        description: "You have been logged out successfully.",
+        title: "¡Cierre de sesión exitoso!",
+        description: "Has cerrado sesión exitosamente.",
       });
 
       setTimeout(() => {
@@ -31,8 +31,8 @@ export default function AppHeader() {
       }, 1500);
     } catch (error) {
       toast({
-        title: "Logout Failed",
-        description: "Failed to logout. Please try again.",
+        title: "Error al cerrar sesión",
+        description: "No se pudo cerrar sesión. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -55,7 +55,7 @@ export default function AppHeader() {
           <AiFillProduct className="text-3xl" />
         </div>
         <div className="text-center sm:text-left">
-          <h1 className="text-2xl font-bold">Welcome, {user?.name}!</h1>
+          <h1 className="text-2xl font-bold">Bienvenido, {user?.name}!</h1>
           <p className="text-sm">{user?.email}</p>
         </div>
       </div>
@@ -69,7 +69,7 @@ export default function AppHeader() {
           className="text-primary-foreground hover:bg-primary-dark"
         >
           <FiHome className="mr-2 h-4 w-4" />
-          Dashboard
+          Panel
         </Button>
         <Button
           variant="ghost"
@@ -78,7 +78,7 @@ export default function AppHeader() {
           className="text-primary-foreground hover:bg-primary-dark"
         >
           <FiBarChart className="mr-2 h-4 w-4" />
-          Business Insights
+          Análisis de Negocio
         </Button>
         <Button
           variant="ghost"
@@ -87,7 +87,7 @@ export default function AppHeader() {
           className="text-primary-foreground hover:bg-primary-dark"
         >
           <FiFileText className="mr-2 h-4 w-4" />
-          API Docs
+          Docs API
         </Button>
         <Button
           variant="ghost"
@@ -96,7 +96,7 @@ export default function AppHeader() {
           className="text-primary-foreground hover:bg-primary-dark"
         >
           <FiActivity className="mr-2 h-4 w-4" />
-          API Status
+          Estado API
         </Button>
 
         <ModeToggle />
@@ -105,7 +105,7 @@ export default function AppHeader() {
           disabled={isLoggingOut}
           className="h-10 px-6 bg-secondary text-secondary-foreground shadow-lg hover:shadow-xl hover:bg-secondary-dark transition-all"
         >
-          {isLoggingOut ? "Logging Out..." : "Logout"}
+          {isLoggingOut ? "Cerrando sesión..." : "Cerrar Sesión"}
         </Button>
       </div>
     </div>

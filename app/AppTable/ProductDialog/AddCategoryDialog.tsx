@@ -46,7 +46,7 @@ export default function AddCategoryDialog() {
     if (categoryName.trim() === "") {
       toast({
         title: "Error",
-        description: "Category name cannot be empty",
+        description: "El nombre de la categoría no puede estar vacío",
         variant: "destructive",
       });
       return;
@@ -60,21 +60,21 @@ export default function AddCategoryDialog() {
       });
 
       if (response.status !== 201) {
-        throw new Error("Failed to add category");
+        throw new Error("No se pudo agregar la categoría");
       }
 
       const newCategory = response.data;
       addCategory(newCategory);
       setCategoryName("");
       toast({
-        title: "Category Created Successfully!",
-        description: `"${categoryName}" has been added to your categories.`,
+        title: "¡Categoría creada exitosamente!",
+        description: `"${categoryName}" ha sido agregada a tus categorías.`,
       });
     } catch (error) {
       console.error("Error adding category:", error);
       toast({
-        title: "Creation Failed",
-        description: "Failed to create the category. Please try again.",
+        title: "Error en la creación",
+        description: "No se pudo crear la categoría. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -86,7 +86,7 @@ export default function AddCategoryDialog() {
     if (newCategoryName.trim() === "") {
       toast({
         title: "Error",
-        description: "Category name cannot be empty",
+        description: "El nombre de la categoría no puede estar vacío",
         variant: "destructive",
       });
       return;
@@ -100,7 +100,7 @@ export default function AddCategoryDialog() {
       });
 
       if (response.status !== 200) {
-        throw new Error("Failed to edit category");
+        throw new Error("No se pudo actualizar la categoría");
       }
 
       const updatedCategory = response.data;
@@ -108,14 +108,14 @@ export default function AddCategoryDialog() {
       setEditingCategory(null);
       setNewCategoryName("");
       toast({
-        title: "Category Updated Successfully!",
-        description: `"${newCategoryName}" has been updated in your categories.`,
+        title: "¡Categoría actualizada exitosamente!",
+        description: `"${newCategoryName}" ha sido actualizada en tus categorías.`,
       });
     } catch (error) {
       console.error("Error editing category:", error);
       toast({
-        title: "Update Failed",
-        description: "Failed to update the category. Please try again.",
+        title: "Error en la actualización",
+        description: "No se pudo actualizar la categoría. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -128,7 +128,7 @@ export default function AddCategoryDialog() {
 
     // Find the category name before deleting for the toast message
     const categoryToDelete = categories.find(cat => cat.id === categoryId);
-    const categoryName = categoryToDelete?.name || "Unknown Category";
+    const categoryName = categoryToDelete?.name || "Categoría Desconocida";
 
     try {
       const response = await axiosInstance.delete("/categories", {
@@ -136,19 +136,19 @@ export default function AddCategoryDialog() {
       });
 
       if (response.status !== 204) {
-        throw new Error("Failed to delete category");
+        throw new Error("No se pudo eliminar la categoría");
       }
 
       deleteCategory(categoryId);
       toast({
-        title: "Category Deleted Successfully!",
-        description: `"${categoryName}" has been permanently deleted.`,
+        title: "¡Categoría eliminada exitosamente!",
+        description: `"${categoryName}" ha sido eliminada permanentemente.`,
       });
     } catch (error) {
       console.error("Error deleting category:", error);
       toast({
-        title: "Delete Failed",
-        description: "Failed to delete the category. Please try again.",
+        title: "Error al eliminar",
+        description: "No se pudo eliminar la categoría. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -163,22 +163,22 @@ export default function AddCategoryDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="h-10 font-semibold">+Add Category</Button>
+        <Button className="h-10 font-semibold">+Añadir Categoría</Button>
       </DialogTrigger>
       <DialogContent
         className="p-4 sm:p-7 sm:px-8 poppins max-h-[90vh] overflow-y-auto"
         aria-describedby="category-dialog-description"
       >
         <DialogHeader>
-          <DialogTitle className="text-[22px]">Add Category</DialogTitle>
+          <DialogTitle className="text-[22px]">Añadir Categoría</DialogTitle>
         </DialogHeader>
         <DialogDescription id="category-dialog-description">
-          Enter the name of the new category
+          Ingresa el nombre de la nueva categoría
         </DialogDescription>
         <Input
           value={categoryName}
           onChange={(e) => setCategoryName(e.target.value)}
-          placeholder="New Category"
+          placeholder="Nueva Categoría"
           className="mt-4"
         />
         <DialogFooter className="mt-9 mb-4 flex flex-col sm:flex-row items-center gap-4">
@@ -187,7 +187,7 @@ export default function AddCategoryDialog() {
               variant={"secondary"}
               className="h-11 w-full sm:w-auto px-11"
             >
-              Cancel
+              Cancelar
             </Button>
           </DialogClose>
           <Button
@@ -195,11 +195,11 @@ export default function AddCategoryDialog() {
             className="h-11 w-full sm:w-auto px-11"
             disabled={isSubmitting} // Button loading effect
           >
-            {isSubmitting ? "Creating..." : "Add Category"}
+            {isSubmitting ? "Creando..." : "Añadir Categoría"}
           </Button>
         </DialogFooter>
         <div className="mt-4">
-          <h3 className="text-lg font-semibold">Categories</h3>
+          <h3 className="text-lg font-semibold">Categorías</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             {categories.map((category) => (
               <div
@@ -211,7 +211,7 @@ export default function AddCategoryDialog() {
                     <Input
                       value={newCategoryName}
                       onChange={(e) => setNewCategoryName(e.target.value)}
-                      placeholder="Edit Category"
+                      placeholder="Editar Categoría"
                       className="h-8"
                     />
                     <div className="flex justify-between gap-2">
@@ -220,13 +220,13 @@ export default function AddCategoryDialog() {
                         className="h-8 w-full"
                         disabled={isEditing}
                       >
-                        {isEditing ? "Saving..." : "Save"}
+                        {isEditing ? "Guardando..." : "Guardar"}
                       </Button>
                       <Button
                         onClick={() => setEditingCategory(null)}
                         className="h-8 w-full"
                       >
-                        Cancel
+                        Cancelar
                       </Button>
                     </div>
                   </div>
@@ -248,7 +248,7 @@ export default function AddCategoryDialog() {
                         className="h-8 w-full"
                         disabled={isDeleting}
                       >
-                        {isDeleting ? "Deleting..." : <FaTrash />}
+                        {isDeleting ? "Eliminando..." : <FaTrash />}
                       </Button>
                     </div>
                   </div>

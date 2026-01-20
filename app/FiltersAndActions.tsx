@@ -80,22 +80,22 @@ export default function FiltersAndActions({
 
       if (filteredProducts.length === 0) {
         toast({
-          title: "No Data to Export",
-          description: "There are no products to export with the current filters.",
+          title: "No hay datos para exportar",
+          description: "No hay productos para exportar con los filtros actuales.",
           variant: "destructive",
         });
         return;
       }
 
       const csvData = filteredProducts.map(product => ({
-        'Product Name': product.name,
+        'Nombre del Producto': product.name,
         'SKU': product.sku,
-        'Price': `$${product.price.toFixed(2)}`,
-        'Quantity': product.quantity,
-        'Status': product.status,
-        'Category': product.category || 'Unknown',
-        'Supplier': product.supplier || 'Unknown',
-        'Created Date': new Date(product.createdAt).toLocaleDateString(),
+        'Precio': `€${product.price.toFixed(2)}`,
+        'Cantidad': product.quantity,
+        'Estado': product.status,
+        'Categoría': product.category || 'Desconocido',
+        'Proveedor': product.supplier || 'Desconocido',
+        'Fecha de Creación': new Date(product.createdAt).toLocaleDateString(),
       }));
 
       const csv = Papa.unparse(csvData);
@@ -110,13 +110,13 @@ export default function FiltersAndActions({
       document.body.removeChild(link);
 
       toast({
-        title: "CSV Export Successful!",
-        description: `${filteredProducts.length} products exported to CSV file.`,
+        title: "¡Exportación CSV exitosa!",
+        description: `${filteredProducts.length} productos exportados a archivo CSV.`,
       });
     } catch (error) {
       toast({
-        title: "Export Failed",
-        description: "Failed to export products to CSV. Please try again.",
+        title: "Error en la exportación",
+        description: "No se pudo exportar los productos a CSV. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     }
@@ -128,27 +128,27 @@ export default function FiltersAndActions({
 
       if (filteredProducts.length === 0) {
         toast({
-          title: "No Data to Export",
-          description: "There are no products to export with the current filters.",
+          title: "No hay datos para exportar",
+          description: "No hay productos para exportar con los filtros actuales.",
           variant: "destructive",
         });
         return;
       }
 
       const excelData = filteredProducts.map(product => ({
-        'Product Name': product.name,
+        'Nombre del Producto': product.name,
         'SKU': product.sku,
-        'Price': product.price,
-        'Quantity': product.quantity,
-        'Status': product.status,
-        'Category': product.category || 'Unknown',
-        'Supplier': product.supplier || 'Unknown',
-        'Created Date': new Date(product.createdAt).toLocaleDateString(),
+        'Precio': product.price,
+        'Cantidad': product.quantity,
+        'Estado': product.status,
+        'Categoría': product.category || 'Desconocido',
+        'Proveedor': product.supplier || 'Desconocido',
+        'Fecha de Creación': new Date(product.createdAt).toLocaleDateString(),
       }));
 
       const ws = XLSX.utils.json_to_sheet(excelData);
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Products');
+      XLSX.utils.book_append_sheet(wb, ws, 'Productos');
 
       // Auto-size columns
       const colWidths = [
@@ -163,16 +163,16 @@ export default function FiltersAndActions({
       ];
       ws['!cols'] = colWidths;
 
-      XLSX.writeFile(wb, `stockly-products-${new Date().toISOString().split('T')[0]}.xlsx`);
+      XLSX.writeFile(wb, `stockly-productos-${new Date().toISOString().split('T')[0]}.xlsx`);
 
       toast({
-        title: "Excel Export Successful!",
-        description: `${filteredProducts.length} products exported to Excel file.`,
+        title: "¡Exportación Excel exitosa!",
+        description: `${filteredProducts.length} productos exportados a archivo Excel.`,
       });
     } catch (error) {
       toast({
-        title: "Export Failed",
-        description: "Failed to export products to Excel. Please try again.",
+        title: "Error en la exportación",
+        description: "No se pudo exportar los productos a Excel. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     }
@@ -186,7 +186,7 @@ export default function FiltersAndActions({
       <div className="flex justify-center">
         <div className="relative w-full max-w-xl">
           <Input
-            placeholder="Search by Name or SKU..."
+            placeholder="Buscar por Nombre o SKU..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="h-10 pr-10 w-full"
@@ -218,7 +218,7 @@ export default function FiltersAndActions({
       <div className="flex justify-center">
         <div className="flex items-center gap-2 bg-muted p-2 rounded-lg">
           <span className="text-sm font-medium text-muted-foreground">
-            Export {filteredProducts.length} products:
+            Exportar {filteredProducts.length} productos:
           </span>
           <Button
             variant="outline"
@@ -325,7 +325,7 @@ function FilterArea({
       {/* Status Filter */}
       {selectedStatuses.length > 0 && (
         <div className="border-dashed border rounded-sm p-1 flex gap-2 items-center px-2 text-sm">
-          <span className="text-gray-600">Status</span>
+          <span className="text-gray-600">Estado</span>
           <Separator orientation="vertical" />
           <div className="flex gap-2 items-center">
             {selectedStatuses.length < 3 ? (
@@ -335,7 +335,7 @@ function FilterArea({
                 </Badge>
               ))
             ) : (
-              <Badge variant={"secondary"}>3 Selected</Badge>
+              <Badge variant={"secondary"}>3 Seleccionados</Badge>
             )}
           </div>
         </div>
@@ -344,7 +344,7 @@ function FilterArea({
       {/* Category Filter */}
       {selectedCategories.length > 0 && (
         <div className="border-dashed border rounded-sm p-1 flex gap-2 items-center px-2 text-sm">
-          <span className="text-gray-600">Category</span>
+          <span className="text-gray-600">Categoría</span>
           <Separator orientation="vertical" />
           <div className="flex gap-2 items-center">
             {selectedCategories.length < 3 ? (
@@ -354,7 +354,7 @@ function FilterArea({
                 </Badge>
               ))
             ) : (
-              <Badge variant={"secondary"}>3 Selected</Badge>
+              <Badge variant={"secondary"}>3 Seleccionados</Badge>
             )}
           </div>
         </div>
@@ -363,7 +363,7 @@ function FilterArea({
       {/* Supplier Filter */}
       {selectedSuppliers.length > 0 && (
         <div className="border-dashed border rounded-sm p-1 flex gap-2 items-center px-2 text-sm">
-          <span className="text-gray-600">Supplier</span>
+          <span className="text-gray-600">Proveedor</span>
           <Separator orientation="vertical" />
           <div className="flex gap-2 items-center">
             {selectedSuppliers.length < 3 ? (
@@ -373,7 +373,7 @@ function FilterArea({
                 </Badge>
               ))
             ) : (
-              <Badge variant={"secondary"}>3 Selected</Badge>
+              <Badge variant={"secondary"}>3 Seleccionados</Badge>
             )}
           </div>
         </div>
@@ -392,7 +392,7 @@ function FilterArea({
             variant={"ghost"}
             className="p-1 px-2"
           >
-            <span>Reset</span>
+            <span>Limpiar</span>
             <IoClose />
           </Button>
         )}

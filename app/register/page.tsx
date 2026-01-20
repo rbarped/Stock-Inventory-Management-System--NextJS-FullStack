@@ -31,8 +31,8 @@ export default function Register() {
       if (response.status === 201) {
         // Show success toast
         toast({
-          title: "Account Created Successfully!",
-          description: "Your account has been created. Redirecting to login page...",
+          title: "¡Cuenta creada exitosamente!",
+          description: "Tu cuenta ha sido creada. Redirigiendo a la página de inicio de sesión...",
         });
 
         // Clear form
@@ -50,8 +50,8 @@ export default function Register() {
     } catch (error) {
       // Show error toast
       toast({
-        title: "Registration Failed",
-        description: error instanceof Error ? error.message : "An unknown error occurred.",
+        title: "Error en el registro",
+        description: error instanceof Error ? error.message : "Ocurrió un error desconocido.",
         variant: "destructive",
       });
     } finally {
@@ -64,36 +64,36 @@ export default function Register() {
   return (
     <div className="flex justify-center items-center h-screen">
       <form onSubmit={handleSubmit} className="w-full max-w-md p-8 space-y-4">
-        <h2 className="text-2xl font-bold">Register</h2>
+        <h2 className="text-2xl font-bold">Registrarse</h2>
         <Input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
+          placeholder="Nombre"
           required
         />
         <Input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
+          placeholder="Correo electrónico"
           required
         />
         <Input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="Contraseña"
           required
         />
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Creating Account..." : "Register"}
+          {isLoading ? "Creando cuenta..." : "Registrarse"}
         </Button>
         <div className="text-center">
           <p>
-            Already have an account?{" "}
+            ¿Ya tienes cuenta?{" "}
             <Link href="/login" className="text-blue-500">
-              Login
+              Iniciar Sesión
             </Link>
           </p>
         </div>

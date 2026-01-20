@@ -64,7 +64,7 @@ export function CategoryDropDown({
         <PopoverTrigger asChild>
           <Button variant={"secondary"} className="h-10">
             <LuGitPullRequestDraft />
-            Categories
+            Categorías
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0 w-56 poppins" side="bottom" align="end">
@@ -98,7 +98,7 @@ export function CategoryDropDown({
                 variant={"ghost"}
                 className="text-[12px] mb-1"
               >
-                Clear Filters
+                Limpiar Filtros
               </Button>
             </div>
           </Command>

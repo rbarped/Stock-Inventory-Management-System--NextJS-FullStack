@@ -25,7 +25,7 @@ export default function PaginationSelection({
 }) {
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3">
-      <div className="text-gray-500 text-sm">Rows per page</div>
+      <div className="text-gray-500 text-sm">Filas por página</div>
       <Select
         value={pagination.pageSize.toString()}
         onValueChange={(value) =>

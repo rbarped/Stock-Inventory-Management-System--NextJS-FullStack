@@ -153,21 +153,21 @@ export default function BusinessInsightsPage() {
 
     // Price range distribution
     const priceRanges = [
-      { name: "$0-$100", min: 0, max: 100 },
-      { name: "$100-$500", min: 100, max: 500 },
-      { name: "$500-$1000", min: 500, max: 1000 },
-      { name: "$1000-$2000", min: 1000, max: 2000 },
-      { name: "$2000+", min: 2000, max: Infinity },
+      { name: "€0-€100", min: 0, max: 100 },
+      { name: "€100-€500", min: 100, max: 500 },
+      { name: "€500-€1000", min: 500, max: 1000 },
+      { name: "€1000-€2000", min: 1000, max: 2000 },
+      { name: "€2000+", min: 2000, max: Infinity },
     ];
 
     const priceRangeDistribution = priceRanges.map((range, index) => ({
       name: range.name,
       value: allProducts.filter((product) => {
-        if (range.name === "$2000+") {
-          // For $2000+ range, include products > $2000 (not including $2000)
+        if (range.name === "€2000+") {
+          // For €2000+ range, include products > €2000 (not including €2000)
           return product.price > 2000;
-        } else if (range.name === "$1000-$2000") {
-          // For $1000-$2000 range, include products >= $1000 and <= $2000
+        } else if (range.name === "€1000-€2000") {
+          // For €1000-€2000 range, include products >= €1000 and <= €2000
           return product.price >= range.min && product.price <= range.max;
         } else {
           // For other ranges, include products >= min and < max (exclusive upper bound)
@@ -183,18 +183,18 @@ export default function BusinessInsightsPage() {
       monthlyAdded: number;
     }> = [];
     const months = [
-      "Jan",
+      "Ene",
       "Feb",
       "Mar",
-      "Apr",
+      "Abr",
       "May",
       "Jun",
       "Jul",
-      "Aug",
+      "Ago",
       "Sep",
       "Oct",
       "Nov",
-      "Dec",
+      "Dic",
     ];
 
     // Group products by creation month using UTC to avoid timezone issues
@@ -270,8 +270,8 @@ export default function BusinessInsightsPage() {
 
   const handleExportAnalytics = () => {
     toast({
-      title: "Analytics Export",
-      description: "Analytics export feature coming soon!",
+      title: "Exportar Análisis",
+      description: "¡La función de exportación de análisis estará disponible pronto!",
     });
   };
 
@@ -281,7 +281,7 @@ export default function BusinessInsightsPage() {
         <div className="container mx-auto p-6">
           <div className="flex items-center justify-center h-64">
             <p className="text-muted-foreground">
-              Please log in to view business insights.
+              Por favor, inicia sesión para ver los análisis de negocio.
             </p>
           </div>
         </div>
@@ -296,10 +296,10 @@ export default function BusinessInsightsPage() {
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold text-primary">
-              Business Insights
+              Análisis de Negocio
             </h1>
             <p className="text-lg text-muted-foreground">
-              Comprehensive insights into your inventory performance
+              Información completa sobre el rendimiento de tu inventario
             </p>
           </div>
           <Button
@@ -307,55 +307,55 @@ export default function BusinessInsightsPage() {
             className="flex items-center gap-2"
           >
             <Download className="h-4 w-4" />
-            Export Analytics
+            Exportar Análisis
           </Button>
         </div>
 
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <AnalyticsCard
-            title="Total Products"
+            title="Total de Productos"
             value={analyticsData.totalProducts}
             icon={Package}
             iconColor="text-blue-600"
-            description="Products in inventory"
+            description="Productos en inventario"
           />
           <AnalyticsCard
-            title="Total Value"
-            value={`$${analyticsData.totalValue.toLocaleString()}`}
+            title="Valor Total"
+            value={`€${analyticsData.totalValue.toLocaleString()}`}
             icon={DollarSign}
             iconColor="text-green-600"
-            description="Total inventory value"
+            description="Valor total del inventario"
           />
           <AnalyticsCard
-            title="Low Stock Items"
+            title="Artículos con Stock Bajo"
             value={analyticsData.lowStockItems}
             icon={AlertTriangle}
             iconColor="text-orange-600"
-            description="Items with quantity <= 20"
+            description="Artículos con cantidad <= 20"
           />
           <AnalyticsCard
-            title="Out of Stock"
+            title="Sin Stock"
             value={analyticsData.outOfStockItems}
             icon={ShoppingCart}
             iconColor="text-red-600"
-            description="Items with zero quantity"
+            description="Artículos con cantidad cero"
           />
         </div>
 
         {/* Charts and Insights */}
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="distribution">Distribution</TabsTrigger>
-            <TabsTrigger value="trends">Trends</TabsTrigger>
-            <TabsTrigger value="alerts">Alerts</TabsTrigger>
+            <TabsTrigger value="overview">Resumen</TabsTrigger>
+            <TabsTrigger value="distribution">Distribución</TabsTrigger>
+            <TabsTrigger value="trends">Tendencias</TabsTrigger>
+            <TabsTrigger value="alerts">Alertas</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Category Distribution */}
-              <ChartCard title="Category Distribution" icon={PieChartIcon}>
+              <ChartCard title="Distribución por Categoría" icon={PieChartIcon}>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
@@ -386,7 +386,7 @@ export default function BusinessInsightsPage() {
 
               {/* Monthly Trend - Full Year */}
               <ChartCard
-                title="Product Growth Trend (Full Year)"
+                title="Tendencia de Crecimiento de Productos (Año Completo)"
                 icon={TrendingUp}
               >
                 <ResponsiveContainer width="100%" height={300}>
@@ -410,7 +410,7 @@ export default function BusinessInsightsPage() {
           <TabsContent value="distribution" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Status Distribution */}
-              <ChartCard title="Status Distribution" icon={Activity}>
+              <ChartCard title="Distribución por Estado" icon={Activity}>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={analyticsData.statusDistribution}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -423,7 +423,7 @@ export default function BusinessInsightsPage() {
               </ChartCard>
 
               {/* Price Range Distribution */}
-              <ChartCard title="Price Range Distribution" icon={BarChart3}>
+              <ChartCard title="Distribución por Rango de Precio" icon={BarChart3}>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={analyticsData.priceRangeDistribution}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -440,7 +440,7 @@ export default function BusinessInsightsPage() {
           <TabsContent value="trends" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Top Products by Value */}
-              <ChartCard title="Top Products by Value" icon={TrendingUp}>
+              <ChartCard title="Productos Principales por Valor" icon={TrendingUp}>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart
                     data={analyticsData.topProducts}
@@ -451,10 +451,10 @@ export default function BusinessInsightsPage() {
                     <YAxis />
                     <Tooltip
                       formatter={(value) => [
-                        `$${value.toLocaleString()}`,
-                        "Value",
+                        `€${value.toLocaleString()}`,
+                        "Valor",
                       ]}
-                      labelFormatter={(label) => `Product: ${label}`}
+                      labelFormatter={(label) => `Producto: ${label}`}
                     />
                     <Bar dataKey="value" fill="#FFBB28" />
                   </BarChart>
@@ -462,7 +462,7 @@ export default function BusinessInsightsPage() {
               </ChartCard>
 
               {/* Monthly Product Addition Trend */}
-              <ChartCard title="Monthly Product Addition" icon={TrendingDown}>
+              <ChartCard title="Adición Mensual de Productos" icon={TrendingDown}>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={analyticsData.monthlyTrend}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -483,7 +483,7 @@ export default function BusinessInsightsPage() {
 
           <TabsContent value="alerts" className="space-y-4">
             {/* Low Stock Alerts */}
-            <ChartCard title="Low Stock Alerts" icon={AlertTriangle}>
+            <ChartCard title="Alertas de Stock Bajo" icon={AlertTriangle}>
               <div className="space-y-4">
                 {analyticsData.lowStockProducts.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -503,7 +503,7 @@ export default function BusinessInsightsPage() {
                               </p>
                             </div>
                             <Badge variant="destructive" className="text-xs">
-                              {product.quantity} left
+                              {product.quantity} restantes
                             </Badge>
                           </div>
                         </CardContent>
@@ -514,7 +514,7 @@ export default function BusinessInsightsPage() {
                   <div className="text-center py-8">
                     <AlertTriangle className="h-12 w-12 text-green-500 mx-auto mb-4" />
                     <p className="text-muted-foreground">
-                      No low stock alerts at the moment!
+                      ¡No hay alertas de stock bajo en este momento!
                     </p>
                   </div>
                 )}
@@ -529,24 +529,24 @@ export default function BusinessInsightsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Eye className="h-5 w-5" />
-                Quick Insights
+                Información Rápida
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm">Average Price</span>
+                <span className="text-sm">Precio Promedio</span>
                 <span className="font-semibold">
                   ${analyticsData.averagePrice.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm">Total Quantity</span>
+                <span className="text-sm">Cantidad Total</span>
                 <span className="font-semibold">
                   {analyticsData.totalQuantity.toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm">Stock Utilization</span>
+                <span className="text-sm">Utilización de Stock</span>
                 <span className="font-semibold">
                   {analyticsData.stockUtilization.toFixed(1)}%
                 </span>
@@ -558,32 +558,32 @@ export default function BusinessInsightsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Performance
+                Rendimiento
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm">Inventory Health</span>
+                <span className="text-sm">Salud del Inventario</span>
                 <Badge
                   variant={
                     analyticsData.lowStockItems > 5 ? "destructive" : "default"
                   }
                 >
                   {analyticsData.lowStockItems > 5
-                    ? "Needs Attention"
-                    : "Healthy"}
+                    ? "Requiere Atención"
+                    : "Saludable"}
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm">Stock Coverage</span>
+                <span className="text-sm">Cobertura de Stock</span>
                 <span className="font-semibold">
-                  {analyticsData.stockCoverage.toFixed(1)} units avg
+                  {analyticsData.stockCoverage.toFixed(1)} unidades prom.
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm">Value Density</span>
+                <span className="text-sm">Densidad de Valor</span>
                 <span className="font-semibold">
-                  ${analyticsData.valueDensity.toFixed(2)} per product
+                  ${analyticsData.valueDensity.toFixed(2)} por producto
                 </span>
               </div>
             </CardContent>
@@ -593,13 +593,13 @@ export default function BusinessInsightsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <QrCode className="h-5 w-5" />
-                Quick QR Code
+                Código QR Rápido
               </CardTitle>
             </CardHeader>
             <CardContent>
               <QRCodeComponent
                 data={`${window.location.origin}/business-insights`}
-                title="Dashboard QR"
+                title="QR del Panel"
                 size={120}
                 showDownload={false}
               />

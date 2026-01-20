@@ -137,14 +137,14 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
 
     // Generate seasonal trends based on actual product creation data
     const months = [
-      "Jan",
+      "Ene",
       "Feb",
       "Mar",
-      "Apr",
+      "Abr",
       "May",
       "Jun",
       "Jul",
-      "Aug",
+      "Ago",
       "Sep",
       "Oct",
       "Nov",
@@ -259,7 +259,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Target className="h-5 w-5" />
-          Demand Forecasting & Insights
+          Previsión de Demanda y Perspectivas
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -269,19 +269,19 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
             <div className="text-2xl font-bold text-blue-600">
               {forecastData.totalProducts}
             </div>
-            <div className="text-sm text-muted-foreground">Total Products</div>
+            <div className="text-sm text-muted-foreground">Total de Productos</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-orange-600">
               {forecastData.lowStockProducts}
             </div>
-            <div className="text-sm text-muted-foreground">Low Stock</div>
+            <div className="text-sm text-muted-foreground">Stock Bajo</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-red-600">
               {forecastData.outOfStockProducts}
             </div>
-            <div className="text-sm text-muted-foreground">Out of Stock</div>
+            <div className="text-sm text-muted-foreground">Agotado</div>
           </div>
         </div>
 
@@ -289,7 +289,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
         <div>
           <h4 className="font-semibold mb-3 flex items-center gap-2">
             <AlertTriangle className="h-4 w-4" />
-            Reorder Suggestions
+            Sugerencias de Reorden
           </h4>
           <div className="space-y-2">
             {forecastData.reorderSuggestions.length > 0 ? (
@@ -303,7 +303,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
                       {suggestion.product.name}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      Current: {suggestion.product.quantity} | Suggested:{" "}
+                      Actual: {suggestion.product.quantity} | Sugerido:{" "}
                       {suggestion.suggestedQuantity}
                     </div>
                     <div className="text-xs text-muted-foreground">
@@ -317,7 +317,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
               ))
             ) : (
               <div className="text-center py-4 text-muted-foreground">
-                No reorder suggestions at this time
+                No hay sugerencias de reorden en este momento
               </div>
             )}
           </div>
@@ -327,7 +327,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
         <div>
           <h4 className="font-semibold mb-3 flex items-center gap-2">
             <Package className="h-4 w-4" />
-            Category Demand Forecast
+            Previsión de Demanda por Categoría
           </h4>
           <div className="space-y-3">
             {forecastData.demandForecast.map((forecast, index) => (
@@ -337,12 +337,12 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
                     {forecast.category}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {forecast.confidence.toFixed(0)}% confidence
+                    {forecast.confidence.toFixed(0)}% de confianza
                   </span>
                 </div>
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Current: {forecast.currentStock}</span>
-                  <span>Predicted: {forecast.predictedDemand}</span>
+                  <span>Actual: {forecast.currentStock}</span>
+                  <span>Predicho: {forecast.predictedDemand}</span>
                 </div>
                 <Progress value={forecast.confidence} className="h-2" />
               </div>
@@ -354,7 +354,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
         <div>
           <h4 className="font-semibold mb-3 flex items-center gap-2">
             <Clock className="h-4 w-4" />
-            Seasonal Demand Trends
+            Tendencias de Demanda Estacional
           </h4>
           <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-2">
             {forecastData.seasonalTrends.map((trend, index) => (
@@ -382,7 +382,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
             onClick={handleGenerateReport}
           >
             <Package className="mr-2 h-4 w-4" />
-            Generate Report
+            Generar Informe
           </Button>
           <Button
             variant="outline"
@@ -390,7 +390,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
             onClick={handleViewDetails}
           >
             <TrendingUp className="mr-2 h-4 w-4" />
-            View Details
+            Ver Detalles
           </Button>
         </div>
       </CardContent>

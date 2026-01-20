@@ -46,12 +46,12 @@ const SortableHeader: React.FC<SortableHeaderProps> = ({ column, label }) => {
         {/* Ascending Sorting */}
         <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
           <IoMdArrowUp className="mr-2 h-4 w-4" />
-          Asc
+          Ascendente
         </DropdownMenuItem>
         {/* Descending Sorting */}
         <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
           <IoMdArrowDown className="mr-2 h-4 w-4" />
-          Desc
+          Descendente
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -62,7 +62,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <SortableHeader column={column} label="Created At" />
+      <SortableHeader column={column} label="Fecha de Creación" />
     ),
     cell: ({ getValue }) => {
       const dateValue = getValue<string | Date>();
@@ -70,12 +70,12 @@ export const columns: ColumnDef<Product>[] = [
         typeof dateValue === "string" ? new Date(dateValue) : dateValue;
 
       if (!date || isNaN(date.getTime())) {
-        return <span>Unknown Date</span>;
+        return <span>Fecha Desconocida</span>;
       }
 
       return (
         <span>
-          {date.toLocaleDateString("en-US", {
+          {date.toLocaleDateString("es-ES", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -90,7 +90,7 @@ export const columns: ColumnDef<Product>[] = [
       const name = row.original.name;
       return <span>{name}</span>;
     },
-    header: ({ column }) => <SortableHeader column={column} label="Name" />,
+    header: ({ column }) => <SortableHeader column={column} label="Nombre" />,
   },
   {
     accessorKey: "sku",
@@ -98,7 +98,7 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: "quantity",
-    header: ({ column }) => <SortableHeader column={column} label="Quantity" />,
+    header: ({ column }) => <SortableHeader column={column} label="Cantidad" />,
     cell: ({ row }) => {
       const quantity = row.original.quantity;
       const isLowStock = quantity > 0 && quantity < 10;
@@ -121,25 +121,25 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: "price",
-    header: ({ column }) => <SortableHeader column={column} label="Price" />,
-    cell: ({ getValue }) => `$${getValue<number>().toFixed(2)}`,
+    header: ({ column }) => <SortableHeader column={column} label="Precio" />,
+    cell: ({ getValue }) => `€${getValue<number>().toFixed(2)}`,
   },
   {
     accessorKey: "status",
-    header: ({ column }) => <SortableHeader column={column} label="Status" />,
+    header: ({ column }) => <SortableHeader column={column} label="Estado" />,
     cell: ({ row }) => {
       const quantity = row.original.quantity;
       let status = "";
       let colorClass = "";
 
       if (quantity > 20) {
-        status = "Available";
+        status = "Disponible";
         colorClass = "bg-green-100 text-green-600";
       } else if (quantity > 0 && quantity <= 20) {
-        status = "Stock Low";
+        status = "Stock Bajo";
         colorClass = "bg-orange-100 text-orange-600";
       } else {
-        status = "Stock Out";
+        status = "Sin Stock";
         colorClass = "bg-red-100 text-red-600";
       }
 
@@ -154,23 +154,23 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: "Categoría",
     cell: ({ row }) => {
       const categoryName = row.original.category;
-      return <span>{categoryName || "Unknown"}</span>;
+      return <span>{categoryName || "Desconocido"}</span>;
     },
   },
   {
     accessorKey: "supplier",
-    header: "Supplier",
+    header: "Proveedor",
     cell: ({ row }) => {
       const supplierName = row.original.supplier; // Display supplier name
-      return <span>{supplierName || "Unknown"}</span>;
+      return <span>{supplierName || "Desconocido"}</span>;
     },
   },
   {
     id: "qrCode",
-    header: "QR Code",
+    header: "Código QR",
     cell: ({ row }) => {
       const product = row.original;
       const qrData = JSON.stringify({

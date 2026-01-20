@@ -143,7 +143,7 @@ export function ProductCategory({
                 variant={"ghost"}
                 className="text-[12px] mb-1"
               >
-                Clear Filters
+                Limpiar Filtros
               </Button>
             </div>
           </Command>

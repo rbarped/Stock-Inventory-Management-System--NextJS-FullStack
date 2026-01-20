@@ -32,8 +32,8 @@ export function DeleteDialog() {
         if (result.success) {
           // Show success toast
           toast({
-            title: "Product Deleted Successfully!",
-            description: `"${selectedProduct.name}" has been permanently deleted.`,
+            title: "¡Producto eliminado exitosamente!",
+            description: `"€{selectedProduct.name}" ha sido eliminado permanentemente.`,
           });
 
           // Close dialog and clear selection
@@ -42,16 +42,16 @@ export function DeleteDialog() {
         } else {
           // Show error toast
           toast({
-            title: "Delete Failed",
-            description: "Failed to delete the product. Please try again.",
+            title: "Error al eliminar",
+            description: "No se pudo eliminar el producto. Por favor, inténtalo de nuevo.",
             variant: "destructive",
           });
         }
       } catch (error) {
         // Show error toast
         toast({
-          title: "Delete Failed",
-          description: "An unexpected error occurred while deleting the product.",
+          title: "Error al eliminar",
+          description: "Ocurrió un error inesperado al eliminar el producto.",
           variant: "destructive",
         });
       } finally {
@@ -70,11 +70,11 @@ export function DeleteDialog() {
       <AlertDialogContent className="p-4 sm:p-8">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-lg sm:text-xl">
-            Are you absolutely sure?
+            ¿Estás absolutamente seguro?
           </AlertDialogTitle>
           <AlertDialogDescription className="mt-2 text-sm sm:text-base">
-            This action cannot be undone. This will permanently delete the
-            product.
+            Esta acción no se puede deshacer. Esto eliminará permanentemente el
+            producto.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="mt-4 sm:mt-8 flex flex-col sm:flex-row gap-2 sm:gap-4">
@@ -84,14 +84,14 @@ export function DeleteDialog() {
             }}
             className="w-full sm:w-auto"
           >
-            Cancel
+            Cancelar
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => deleteProductFx()}
             disabled={isDeleting}
             className="w-full sm:w-auto"
           >
-            {isDeleting ? "Deleting..." : "Delete"}
+            {isDeleting ? "Eliminando..." : "Eliminar"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

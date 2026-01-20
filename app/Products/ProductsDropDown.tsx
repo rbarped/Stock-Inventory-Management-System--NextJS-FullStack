@@ -55,8 +55,8 @@ export default function ProductsDropDown({ row }: ProductsDropDownProps) {
       if (result.success) {
         // Show success toast
         toast({
-          title: "Product Copied Successfully!",
-          description: `"${row.original.name}" has been copied with a new SKU.`,
+          title: "¡Producto copiado exitosamente!",
+          description: `"${row.original.name}" ha sido copiado con un nuevo SKU.`,
         });
 
         await loadProducts();
@@ -64,16 +64,16 @@ export default function ProductsDropDown({ row }: ProductsDropDownProps) {
       } else {
         // Show error toast
         toast({
-          title: "Copy Failed",
-          description: "Failed to copy the product. Please try again.",
+          title: "Error al copiar",
+          description: "No se pudo copiar el producto. Por favor, inténtalo de nuevo.",
           variant: "destructive",
         });
       }
     } catch (error) {
       // Show error toast
       toast({
-        title: "Copy Failed",
-        description: "An unexpected error occurred while copying the product.",
+        title: "Error al copiar",
+        description: "Ocurrió un error inesperado al copiar el producto.",
         variant: "destructive",
       });
     } finally {
@@ -100,24 +100,24 @@ export default function ProductsDropDown({ row }: ProductsDropDownProps) {
       if (result.success) {
         // Show success toast
         toast({
-          title: "Product Deleted Successfully!",
-          description: `"${row.original.name}" has been permanently deleted.`,
+          title: "¡Producto eliminado exitosamente!",
+          description: `"${row.original.name}" ha sido eliminado permanentemente.`,
         });
 
         router.refresh();
       } else {
         // Show error toast
         toast({
-          title: "Delete Failed",
-          description: "Failed to delete the product. Please try again.",
+          title: "Error al eliminar",
+          description: "No se pudo eliminar el producto. Por favor, inténtalo de nuevo.",
           variant: "destructive",
         });
       }
     } catch (error) {
       // Show error toast
       toast({
-        title: "Delete Failed",
-        description: "An unexpected error occurred while deleting the product.",
+        title: "Error al eliminar",
+        description: "Ocurrió un error inesperado al eliminar el producto.",
         variant: "destructive",
       });
     } finally {
@@ -149,14 +149,14 @@ export default function ProductsDropDown({ row }: ProductsDropDownProps) {
           onClick={handleCopyProduct}
           disabled={isCopying}
         >
-          {isCopying ? "Copying..." : "Copy"}
+          {isCopying ? "Copiando..." : "Copiar"}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleEditProduct}>Edit</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleEditProduct}>Editar</DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleDeleteProduct}
           disabled={isDeleting}
         >
-          {isDeleting ? "Deleting..." : "Delete"}
+          {isDeleting ? "Eliminando..." : "Eliminar"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

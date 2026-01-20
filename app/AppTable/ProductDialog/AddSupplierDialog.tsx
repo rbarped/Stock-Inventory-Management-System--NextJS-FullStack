@@ -46,7 +46,7 @@ export default function AddSupplierDialog() {
     if (supplierName.trim() === "") {
       toast({
         title: "Error",
-        description: "Supplier name cannot be empty",
+        description: "El nombre del proveedor no puede estar vacío",
         variant: "destructive",
       });
       return;
@@ -60,21 +60,21 @@ export default function AddSupplierDialog() {
       });
 
       if (response.status !== 201) {
-        throw new Error("Failed to add supplier");
+        throw new Error("No se pudo agregar el proveedor");
       }
 
       const newSupplier = response.data;
       addSupplier(newSupplier);
       setSupplierName("");
       toast({
-        title: "Supplier Created Successfully!",
-        description: `"${supplierName}" has been added to your suppliers.`,
+        title: "¡Proveedor creado exitosamente!",
+        description: `"${supplierName}" ha sido agregado a tus proveedores.`,
       });
     } catch (error) {
       console.error("Error adding supplier:", error);
       toast({
-        title: "Creation Failed",
-        description: "Failed to create the supplier. Please try again.",
+        title: "Error en la creación",
+        description: "No se pudo crear el proveedor. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -86,7 +86,7 @@ export default function AddSupplierDialog() {
     if (newSupplierName.trim() === "") {
       toast({
         title: "Error",
-        description: "Supplier name cannot be empty",
+        description: "El nombre del proveedor no puede estar vacío",
         variant: "destructive",
       });
       return;
@@ -100,7 +100,7 @@ export default function AddSupplierDialog() {
       });
 
       if (response.status !== 200) {
-        throw new Error("Failed to edit supplier");
+        throw new Error("No se pudo actualizar el proveedor");
       }
 
       const updatedSupplier = response.data;
@@ -108,14 +108,14 @@ export default function AddSupplierDialog() {
       setEditingSupplier(null);
       setNewSupplierName("");
       toast({
-        title: "Supplier Updated Successfully!",
-        description: `"${newSupplierName}" has been updated in your suppliers.`,
+        title: "¡Proveedor actualizado exitosamente!",
+        description: `"${newSupplierName}" ha sido actualizado en tus proveedores.`,
       });
     } catch (error) {
       console.error("Error editing supplier:", error);
       toast({
-        title: "Update Failed",
-        description: "Failed to update the supplier. Please try again.",
+        title: "Error en la actualización",
+        description: "No se pudo actualizar el proveedor. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -128,7 +128,7 @@ export default function AddSupplierDialog() {
 
     // Find the supplier name before deleting for the toast message
     const supplierToDelete = suppliers.find(sup => sup.id === supplierId);
-    const supplierName = supplierToDelete?.name || "Unknown Supplier";
+    const supplierName = supplierToDelete?.name || "Proveedor Desconocido";
 
     try {
       const response = await axiosInstance.delete("/suppliers", {
@@ -136,19 +136,19 @@ export default function AddSupplierDialog() {
       });
 
       if (response.status !== 204) {
-        throw new Error("Failed to delete supplier");
+        throw new Error("No se pudo eliminar el proveedor");
       }
 
       deleteSupplier(supplierId);
       toast({
-        title: "Supplier Deleted Successfully!",
-        description: `"${supplierName}" has been permanently deleted.`,
+        title: "¡Proveedor eliminado exitosamente!",
+        description: `"${supplierName}" ha sido eliminado permanentemente.`,
       });
     } catch (error) {
       console.error("Error deleting supplier:", error);
       toast({
-        title: "Delete Failed",
-        description: "Failed to delete the supplier. Please try again.",
+        title: "Error al eliminar",
+        description: "No se pudo eliminar el proveedor. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -163,22 +163,22 @@ export default function AddSupplierDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="h-10 font-semibold">+Add Supplier</Button>
+        <Button className="h-10 font-semibold">+Añadir Proveedor</Button>
       </DialogTrigger>
       <DialogContent
         className="p-4 sm:p-7 sm:px-8 poppins max-h-[90vh] overflow-y-auto"
         aria-describedby="supplier-dialog-description"
       >
         <DialogHeader>
-          <DialogTitle className="text-[22px]">Add Supplier</DialogTitle>
+          <DialogTitle className="text-[22px]">Añadir Proveedor</DialogTitle>
         </DialogHeader>
         <DialogDescription id="supplier-dialog-description">
-          Enter the name of the new supplier
+          Ingresa el nombre del nuevo proveedor
         </DialogDescription>
         <Input
           value={supplierName}
           onChange={(e) => setSupplierName(e.target.value)}
-          placeholder="New Supplier"
+          placeholder="Nuevo Proveedor"
           className="mt-4"
         />
         <DialogFooter className="mt-9 mb-4 flex flex-col sm:flex-row items-center gap-4">
@@ -187,7 +187,7 @@ export default function AddSupplierDialog() {
               variant={"secondary"}
               className="h-11 w-full sm:w-auto px-11"
             >
-              Cancel
+              Cancelar
             </Button>
           </DialogClose>
           <Button
@@ -195,11 +195,11 @@ export default function AddSupplierDialog() {
             className="h-11 w-full sm:w-auto px-11"
             disabled={isSubmitting} // Button loading effect
           >
-            {isSubmitting ? "Creating..." : "Add Supplier"}
+            {isSubmitting ? "Creando..." : "Añadir Proveedor"}
           </Button>
         </DialogFooter>
         <div className="mt-4">
-          <h3 className="text-lg font-semibold">Suppliers</h3>
+          <h3 className="text-lg font-semibold">Proveedores</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             {suppliers.map((supplier) => (
               <div
@@ -211,7 +211,7 @@ export default function AddSupplierDialog() {
                     <Input
                       value={newSupplierName}
                       onChange={(e) => setNewSupplierName(e.target.value)}
-                      placeholder="Edit Supplier"
+                      placeholder="Editar Proveedor"
                       className="h-8"
                     />
                     <div className="flex justify-between gap-2">
@@ -220,13 +220,13 @@ export default function AddSupplierDialog() {
                         className="h-8 w-full"
                         disabled={isEditing}
                       >
-                        {isEditing ? "Saving..." : "Save"}
+                        {isEditing ? "Guardando..." : "Guardar"}
                       </Button>
                       <Button
                         onClick={() => setEditingSupplier(null)}
                         className="h-8 w-full"
                       >
-                        Cancel
+                        Cancelar
                       </Button>
                     </div>
                   </div>
@@ -248,7 +248,7 @@ export default function AddSupplierDialog() {
                         className="h-8 w-full"
                         disabled={isDeleting}
                       >
-                        {isDeleting ? "Deleting..." : <FaTrash />}
+                        {isDeleting ? "Eliminando..." : <FaTrash />}
                       </Button>
                     </div>
                   </div>

@@ -192,7 +192,7 @@ export const ProductTable = React.memo(function ProductTable({
                 ) : (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="text-center">
-                      No results.
+                      No hay resultados.
                     </TableCell>
                   </TableRow>
                 )}
@@ -229,7 +229,7 @@ export const ProductTable = React.memo(function ProductTable({
               <GrFormPrevious />
             </Button>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Page {pagination.pageIndex + 1} of {table.getPageCount()}
+              Página {pagination.pageIndex + 1} de {table.getPageCount()}
             </span>
             <Button
               variant="outline"

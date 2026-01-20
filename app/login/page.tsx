@@ -26,8 +26,8 @@ export default function Login() {
 
       // Show success toast
       toast({
-        title: "Login Successful!",
-        description: "Welcome back! Redirecting to dashboard...",
+        title: "¡Inicio de sesión exitoso!",
+        description: "¡Bienvenido de nuevo! Redirigiendo al panel...",
       });
 
       // Clear form
@@ -41,8 +41,8 @@ export default function Login() {
     } catch (error) {
       // Show error toast
       toast({
-        title: "Login Failed",
-        description: "Invalid email or password. Please try again.",
+        title: "Error de inicio de sesión",
+        description: "Email o contraseña inválidos. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -55,29 +55,29 @@ export default function Login() {
   return (
     <div className="flex justify-center items-center h-screen">
       <form onSubmit={handleSubmit} className="w-full max-w-md p-8 space-y-4">
-        <h2 className="text-2xl font-bold">Login</h2>
+        <h2 className="text-2xl font-bold">Iniciar Sesión</h2>
         <Input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
+          placeholder="Correo electrónico"
           required
         />
         <Input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="Contraseña"
           required
         />
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Logging In..." : "Login"}
+          {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
         </Button>
         <div className="text-center">
           <p>
-            Don&apos;t have an account?{" "}
+            ¿No tienes cuenta?{" "}
             <Link href="/register" className="text-blue-500">
-              Register
+              Registrarse
             </Link>
           </p>
         </div>

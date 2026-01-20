@@ -27,17 +27,17 @@ import { Product } from "@/app/types";
 const ProductSchema = z.object({
   productName: z
     .string()
-    .min(1, "Product Name is required")
-    .max(100, "Product Name must be 100 characters or less"),
+    .min(1, "El nombre del producto es requerido")
+    .max(100, "El nombre del producto debe tener 100 caracteres o menos"),
   sku: z
     .string()
-    .min(1, "SKU is required")
-    .regex(/^[a-zA-Z0-9-_]+$/, "SKU must be alphanumeric"),
+    .min(1, "El SKU es requerido")
+    .regex(/^[a-zA-Z0-9-_]+$/, "El SKU debe ser alfanumérico"),
   quantity: z
     .number()
-    .int("Quantity must be an integer")
-    .nonnegative("Quantity cannot be negative"),
-  price: z.number().nonnegative("Price cannot be negative"),
+    .int("La cantidad debe ser un número entero")
+    .nonnegative("La cantidad no puede ser negativa"),
+  price: z.number().nonnegative("El precio no puede ser negativo"),
 });
 
 interface ProductFormData {
@@ -111,9 +111,9 @@ export default function AddProductDialog({
   }, [selectedProduct, openProductDialog, reset]);
 
   const calculateStatus = (quantity: number): string => {
-    if (quantity > 20) return "Available";
-    if (quantity > 0 && quantity <= 20) return "Stock Low";
-    return "Stock Out";
+    if (quantity > 20) return "Disponible";
+    if (quantity > 0 && quantity <= 20) return "Stock Bajo";
+    return "Sin Stock";
   };
 
   const onSubmit = async (data: ProductFormData) => {
@@ -139,16 +139,16 @@ export default function AddProductDialog({
 
         if (result.success) {
           toast({
-            title: "Product Created Successfully!",
-            description: `"${data.productName}" has been added to your inventory.`,
+            title: "¡Producto creado exitosamente!",
+            description: `"${data.productName}" ha sido agregado a tu inventario.`,
           });
           dialogCloseRef.current?.click();
           loadProducts();
           setOpenProductDialog(false);
         } else {
           toast({
-            title: "Creation Failed",
-            description: "Failed to create the product. Please try again.",
+            title: "Error en la creación",
+            description: "No se pudo crear el producto. Por favor, inténtalo de nuevo.",
             variant: "destructive",
           });
         }
@@ -169,23 +169,23 @@ export default function AddProductDialog({
         const result = await updateProduct(productToUpdate);
         if (result.success) {
           toast({
-            title: "Product Updated Successfully!",
-            description: `"${data.productName}" has been updated in your inventory.`,
+            title: "¡Producto actualizado exitosamente!",
+            description: `"${data.productName}" ha sido actualizado en tu inventario.`,
           });
           loadProducts();
           setOpenProductDialog(false);
         } else {
           toast({
-            title: "Update Failed",
-            description: "Failed to update the product. Please try again.",
+            title: "Error en la actualización",
+            description: "No se pudo actualizar el producto. Por favor, inténtalo de nuevo.",
             variant: "destructive",
           });
         }
       }
     } catch (error: any) {
       toast({
-        title: "Operation Failed",
-        description: "An unexpected error occurred. Please try again.",
+        title: "Operación fallida",
+        description: "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -207,7 +207,7 @@ export default function AddProductDialog({
   return (
     <Dialog open={openProductDialog} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="h-10 font-semibold">+Add Product</Button>
+        <Button className="h-10 font-semibold">+Agregar Producto</Button>
       </DialogTrigger>
       <DialogContent
         className="p-4 sm:p-7 sm:px-8 poppins max-h-[90vh] overflow-y-auto"
@@ -215,11 +215,11 @@ export default function AddProductDialog({
       >
         <DialogHeader>
           <DialogTitle className="text-[22px]">
-            {selectedProduct ? "Update Product" : "Add Product"}
+            {selectedProduct ? "Actualizar Producto" : "Agregar Producto"}
           </DialogTitle>
         </DialogHeader>
         <DialogDescription id="dialog-description">
-          Enter the details of the product below.
+          Ingresa los detalles del producto a continuación.
         </DialogDescription>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -230,7 +230,7 @@ export default function AddProductDialog({
               <Price />
               <div>
                 <label htmlFor="category" className="block text-sm font-medium">
-                  Category
+                  Categoría
                 </label>
                 <select
                   id="category"
@@ -238,7 +238,7 @@ export default function AddProductDialog({
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="mt-1 h-11 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option value="">Select Category</option>
+                  <option value="">Seleccionar Categoría</option>
                   {categories.map((category) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
@@ -248,7 +248,7 @@ export default function AddProductDialog({
               </div>
               <div>
                 <label htmlFor="supplier" className="block text-sm font-medium">
-                  Supplier
+                  Proveedor
                 </label>
                 <select
                   id="supplier"
@@ -256,7 +256,7 @@ export default function AddProductDialog({
                   onChange={(e) => setSelectedSupplier(e.target.value)}
                   className="mt-1 h-11 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option value="">Select Supplier</option>
+                  <option value="">Seleccionar Proveedor</option>
                   {suppliers.map((supplier) => (
                     <option key={supplier.id} value={supplier.id}>
                       {supplier.name}
@@ -272,7 +272,7 @@ export default function AddProductDialog({
                   variant="secondary"
                   className="h-11 w-full sm:w-auto px-11"
                 >
-                  Cancel
+                  Cancelar
                 </Button>
               </DialogClose>
               <Button
@@ -281,10 +281,10 @@ export default function AddProductDialog({
                 isLoading={isSubmitting} // Button loading effect
               >
                 {isSubmitting
-                  ? "Loading..."
+                  ? "Cargando..."
                   : selectedProduct
-                  ? "Update Product"
-                  : "Add Product"}
+                  ? "Actualizar Producto"
+                  : "Agregar Producto"}
               </Button>
             </DialogFooter>
           </form>
