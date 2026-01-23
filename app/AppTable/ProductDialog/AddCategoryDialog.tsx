@@ -60,7 +60,7 @@ export default function AddCategoryDialog() {
       });
 
       if (response.status !== 201) {
-        throw new Error("No se pudo agregar la categoría");
+        throw new Error("No se pudo añadir la categoría");
       }
 
       const newCategory = response.data;
@@ -68,7 +68,7 @@ export default function AddCategoryDialog() {
       setCategoryName("");
       toast({
         title: "¡Categoría creada exitosamente!",
-        description: `"${categoryName}" ha sido agregada a tus categorías.`,
+        description: `"${categoryName}" ha sido añadida a tus categorías.`,
       });
     } catch (error) {
       console.error("Error adding category:", error);

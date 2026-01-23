@@ -140,7 +140,7 @@ export default function AddProductDialog({
         if (result.success) {
           toast({
             title: "¡Producto creado exitosamente!",
-            description: `"${data.productName}" ha sido agregado a tu inventario.`,
+            description: `"${data.productName}" ha sido añadido a tu inventario.`,
           });
           dialogCloseRef.current?.click();
           loadProducts();
@@ -148,7 +148,7 @@ export default function AddProductDialog({
         } else {
           toast({
             title: "Error en la creación",
-            description: "No se pudo crear el producto. Por favor, inténtalo de nuevo.",
+            description: "No se pudo añadir el producto. Por favor, inténtalo de nuevo.",
             variant: "destructive",
           });
         }
@@ -207,7 +207,7 @@ export default function AddProductDialog({
   return (
     <Dialog open={openProductDialog} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="h-10 font-semibold">+Agregar Producto</Button>
+        <Button className="h-10 font-semibold">+Añadir Producto</Button>
       </DialogTrigger>
       <DialogContent
         className="p-4 sm:p-7 sm:px-8 poppins max-h-[90vh] overflow-y-auto"
@@ -215,7 +215,7 @@ export default function AddProductDialog({
       >
         <DialogHeader>
           <DialogTitle className="text-[22px]">
-            {selectedProduct ? "Actualizar Producto" : "Agregar Producto"}
+            {selectedProduct ? "Actualizar Producto" : "Añadir Producto"}
           </DialogTitle>
         </DialogHeader>
         <DialogDescription id="dialog-description">
@@ -284,7 +284,7 @@ export default function AddProductDialog({
                   ? "Cargando..."
                   : selectedProduct
                   ? "Actualizar Producto"
-                  : "Agregar Producto"}
+                  : "Añadir Producto"}
               </Button>
             </DialogFooter>
           </form>

@@ -105,7 +105,7 @@ export const useProductStore = create<ProductState>((set) => ({
       }));
       return { success: true };
     } catch (error) {
-      console.error("Error al agregar el producto:", error);
+      console.error("Error al añadir el producto:", error);
       return { success: false };
     } finally {
       set({ isLoading: false });

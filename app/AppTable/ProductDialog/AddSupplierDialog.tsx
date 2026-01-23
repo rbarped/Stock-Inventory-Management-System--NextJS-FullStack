@@ -60,7 +60,7 @@ export default function AddSupplierDialog() {
       });
 
       if (response.status !== 201) {
-        throw new Error("No se pudo agregar el proveedor");
+        throw new Error("No se pudo añadir el proveedor");
       }
 
       const newSupplier = response.data;
@@ -68,13 +68,13 @@ export default function AddSupplierDialog() {
       setSupplierName("");
       toast({
         title: "¡Proveedor creado exitosamente!",
-        description: `"${supplierName}" ha sido agregado a tus proveedores.`,
+        description: `"${supplierName}" ha sido añadido a tus proveedores.`,
       });
     } catch (error) {
       console.error("Error adding supplier:", error);
       toast({
         title: "Error en la creación",
-        description: "No se pudo crear el proveedor. Por favor, inténtalo de nuevo.",
+        description: "No se pudo añadir el proveedor. Por favor, inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
