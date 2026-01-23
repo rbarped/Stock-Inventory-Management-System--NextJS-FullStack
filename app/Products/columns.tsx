@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 // import { QRCodeHover } from "@/components/ui/qr-code-hover";
-import { AlertTriangle, ArrowUpDown, Minus, Plus } from "lucide-react";
+import { AlertTriangle, ArrowUpDown, Minus, Plus, X } from "lucide-react";
 import { IoMdArrowDown, IoMdArrowUp } from "react-icons/io";
 import { useProductStore } from "../useProductStore";
 import { Button } from "@/components/ui/button";
@@ -105,7 +105,8 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const quantity = row.original.quantity;
       const productId = row.original.id;
-      const isLowStock = quantity > 0 && quantity < 10;
+      const isCriticalStock = quantity > 0 && quantity <= 3;
+      const isLowStock = quantity > 3 && quantity <= 5;
       const isOutOfStock = quantity === 0;
       const updateProductQuantity = useProductStore((state) => state.updateProductQuantity);
       const { toast } = useToast();
@@ -155,7 +156,7 @@ export const columns: ColumnDef<Product>[] = [
           >
             <Minus className="h-3 w-3" />
           </Button>
-          <span className={`min-w-[2rem] text-center ${isLowStock || isOutOfStock ? "font-semibold" : ""}`}>
+          <span className={`min-w-[2rem] text-center ${isLowStock || isOutOfStock || isCriticalStock ? "font-semibold" : ""}`}>
             {quantity}
           </span>
           <Button
@@ -166,11 +167,14 @@ export const columns: ColumnDef<Product>[] = [
           >
             <Plus className="h-3 w-3" />
           </Button>
+          {isCriticalStock && (
+            <AlertTriangle className="h-4 w-4 text-orange-500 fill-red-100" />
+          )}
           {isLowStock && (
-            <AlertTriangle className="h-4 w-4 text-orange-500" />
+            <AlertTriangle className="h-4 w-4 text-yellow-500" />
           )}
           {isOutOfStock && (
-            <AlertTriangle className="h-4 w-4 text-red-500" />
+            <X className="h-4 w-4 text-red-600" />
           )}
         </div>
       );
@@ -189,14 +193,17 @@ export const columns: ColumnDef<Product>[] = [
       let status = "";
       let colorClass = "";
 
-      if (quantity > 20) {
+      if (quantity > 5) {
         status = "Disponible";
         colorClass = "bg-green-100 text-green-600";
-      } else if (quantity > 0 && quantity <= 20) {
+      } else if (quantity > 3 && quantity <= 5) {
         status = "Stock Bajo";
         colorClass = "bg-orange-100 text-orange-600";
+      } else if (quantity > 0 && quantity <= 3) {
+        status = "Stock Crítico";
+        colorClass = "bg-rose-100 text-rose-700";
       } else {
-        status = "Sin Stock";
+        status = "Agotado";
         colorClass = "bg-red-100 text-red-600";
       }
 
