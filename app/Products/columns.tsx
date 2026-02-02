@@ -61,6 +61,86 @@ const SortableHeader: React.FC<SortableHeaderProps> = ({ column, label }) => {
   );
 };
 
+// Componente separado para la celda de cantidad que puede usar hooks
+const QuantityCell: React.FC<{ productId: string; quantity: number }> = ({
+  productId,
+  quantity,
+}) => {
+  const isCriticalStock = quantity > 0 && quantity <= 3;
+  const isLowStock = quantity > 3 && quantity <= 5;
+  const isOutOfStock = quantity === 0;
+  const updateProductQuantity = useProductStore((state) => state.updateProductQuantity);
+  const { toast } = useToast();
+
+  const handleIncrement = async () => {
+    const result = await updateProductQuantity(productId, quantity + 1);
+    if (result.success) {
+      toast({
+        title: "Cantidad actualizada",
+        description: `La cantidad se incrementó a ${quantity + 1}`,
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar la cantidad",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDecrement = async () => {
+    if (quantity > 0) {
+      const result = await updateProductQuantity(productId, quantity - 1);
+      if (result.success) {
+        toast({
+          title: "Cantidad actualizada",
+          description: `La cantidad se decrementó a ${quantity - 1}`,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "No se pudo actualizar la cantidad",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7"
+        onClick={handleDecrement}
+        disabled={quantity === 0}
+      >
+        <Minus className="h-3 w-3" />
+      </Button>
+      <span className={`min-w-[2rem] text-center ${isLowStock || isOutOfStock || isCriticalStock ? "font-semibold" : ""}`}>
+        {quantity}
+      </span>
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7"
+        onClick={handleIncrement}
+      >
+        <Plus className="h-3 w-3" />
+      </Button>
+      {isCriticalStock && (
+        <AlertTriangle className="h-4 w-4 text-orange-500 fill-red-100" />
+      )}
+      {isLowStock && (
+        <AlertTriangle className="h-4 w-4 text-yellow-500" />
+      )}
+      {isOutOfStock && (
+        <X className="h-4 w-4 text-red-600" />
+      )}
+    </div>
+  );
+};
+
 export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "createdAt",
@@ -105,79 +185,8 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const quantity = row.original.quantity;
       const productId = row.original.id;
-      const isCriticalStock = quantity > 0 && quantity <= 3;
-      const isLowStock = quantity > 3 && quantity <= 5;
-      const isOutOfStock = quantity === 0;
-      const updateProductQuantity = useProductStore((state) => state.updateProductQuantity);
-      const { toast } = useToast();
-
-      const handleIncrement = async () => {
-        const result = await updateProductQuantity(productId, quantity + 1);
-        if (result.success) {
-          toast({
-            title: "Cantidad actualizada",
-            description: `La cantidad se incrementó a ${quantity + 1}`,
-          });
-        } else {
-          toast({
-            title: "Error",
-            description: "No se pudo actualizar la cantidad",
-            variant: "destructive",
-          });
-        }
-      };
-
-      const handleDecrement = async () => {
-        if (quantity > 0) {
-          const result = await updateProductQuantity(productId, quantity - 1);
-          if (result.success) {
-            toast({
-              title: "Cantidad actualizada",
-              description: `La cantidad se decrementó a ${quantity - 1}`,
-            });
-          } else {
-            toast({
-              title: "Error",
-              description: "No se pudo actualizar la cantidad",
-              variant: "destructive",
-            });
-          }
-        }
-      };
-
-      return (
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-7 w-7"
-            onClick={handleDecrement}
-            disabled={quantity === 0}
-          >
-            <Minus className="h-3 w-3" />
-          </Button>
-          <span className={`min-w-[2rem] text-center ${isLowStock || isOutOfStock || isCriticalStock ? "font-semibold" : ""}`}>
-            {quantity}
-          </span>
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-7 w-7"
-            onClick={handleIncrement}
-          >
-            <Plus className="h-3 w-3" />
-          </Button>
-          {isCriticalStock && (
-            <AlertTriangle className="h-4 w-4 text-orange-500 fill-red-100" />
-          )}
-          {isLowStock && (
-            <AlertTriangle className="h-4 w-4 text-yellow-500" />
-          )}
-          {isOutOfStock && (
-            <X className="h-4 w-4 text-red-600" />
-          )}
-        </div>
-      );
+      
+      return <QuantityCell productId={productId} quantity={quantity} />;
     },
   },
   {
