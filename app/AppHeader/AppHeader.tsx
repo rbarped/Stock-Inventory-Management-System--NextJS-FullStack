@@ -45,67 +45,49 @@ export default function AppHeader() {
   };
 
   return (
-    <div className="p-4 flex flex-col sm:flex-row justify-between items-center bg-primary text-primary-foreground rounded-lg shadow-md">
+    <div className="p-3 md:p-4 flex flex-col lg:flex-row justify-between items-center bg-primary text-primary-foreground rounded-lg shadow-md gap-3">
       {/* Logo and Welcome Section */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4 w-full lg:w-auto">
         <div
-          className={`flex aspect-square size-10 items-center justify-center rounded-lg bg-primary-dark text-primary-foreground cursor-pointer`}
+          className={`flex aspect-square size-10 items-center justify-center rounded-lg bg-primary-dark text-primary-foreground cursor-pointer flex-shrink-0`}
           onClick={() => handleNavigation("/")}
         >
-          <AiFillProduct className="text-3xl" />
+          <AiFillProduct className="text-2xl md:text-3xl" />
         </div>
-        <div className="text-center sm:text-left">
-          <h1 className="text-2xl font-bold">Bienvenido, {user?.name}!</h1>
-          <p className="text-sm">{user?.email}</p>
+        <div className="text-left overflow-hidden">
+          <h1 className="text-lg md:text-2xl font-bold truncate">Bienvenido, {user?.name}!</h1>
+          <p className="text-xs md:text-sm truncate">{user?.email}</p>
         </div>
       </div>
 
       {/* Navigation Links */}
-      <div className="flex items-center space-x-2 mt-4 sm:mt-0">
+      <div className="flex items-center flex-wrap justify-center gap-2 w-full lg:w-auto">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => handleNavigation("/")}
-          className="text-primary-foreground hover:bg-primary-dark"
+          className="text-primary-foreground hover:bg-primary-dark flex-shrink-0 text-xs md:text-sm px-2 md:px-4"
         >
-          <FiHome className="mr-2 h-4 w-4" />
-          Panel
+          <FiHome className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" />
+          <span className="hidden sm:inline">Panel</span>
         </Button>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => handleNavigation("/business-insights")}
-          className="text-primary-foreground hover:bg-primary-dark"
+          className="text-primary-foreground hover:bg-primary-dark flex-shrink-0 text-xs md:text-sm px-2 md:px-4"
         >
-          <FiBarChart className="mr-2 h-4 w-4" />
-          Análisis de Negocio
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => handleNavigation("/api-docs")}
-          className="text-primary-foreground hover:bg-primary-dark"
-        >
-          <FiFileText className="mr-2 h-4 w-4" />
-          Docs API
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => handleNavigation("/api-status")}
-          className="text-primary-foreground hover:bg-primary-dark"
-        >
-          <FiActivity className="mr-2 h-4 w-4" />
-          Estado API
+          <FiBarChart className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" />
+          <span className="hidden sm:inline">Análisis</span>
         </Button>
 
         <ModeToggle />
         <Button
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="h-10 px-6 bg-secondary text-secondary-foreground shadow-lg hover:shadow-xl hover:bg-secondary-dark transition-all"
+          className="h-8 md:h-10 px-3 md:px-6 bg-secondary text-secondary-foreground shadow-lg hover:shadow-xl hover:bg-secondary-dark transition-all flex-shrink-0 text-xs md:text-sm"
         >
-          {isLoggingOut ? "Cerrando sesión..." : "Cerrar Sesión"}
+          {isLoggingOut ? "Cerrando..." : "Cerrar Sesión"}
         </Button>
       </div>
     </div>
